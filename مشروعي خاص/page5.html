@@ -1,0 +1,359 @@
+<!DOCTYPE html><html class="dark" dir="rtl" lang="ar"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&amp;family=Tajawal:wght@300;400;500;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#051424",
+                    "on-secondary-container": "#e6ecff",
+                    "tertiary-fixed": "#ffdad7",
+                    "on-error": "#690005",
+                    "primary": "#bec6e0",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "inverse-primary": "#565e74",
+                    "on-background": "#d4e4fa",
+                    "surface-container-highest": "#273647",
+                    "on-tertiary-container": "#eb4141",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface-variant": "#273647",
+                    "error-container": "#93000a",
+                    "primary-fixed": "#dae2fd",
+                    "surface-bright": "#2c3a4c",
+                    "on-secondary-fixed": "#001a42",
+                    "on-secondary": "#002e6a",
+                    "on-tertiary": "#68000a",
+                    "surface-container-lowest": "#010f1f",
+                    "secondary-container": "#0566d9",
+                    "on-primary-container": "#798098",
+                    "surface-container-low": "#0d1c2d",
+                    "outline": "#909097",
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#d4e4fa",
+                    "inverse-on-surface": "#233143",
+                    "outline-variant": "#45464d",
+                    "secondary": "#adc6ff",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "on-tertiary-fixed": "#410004",
+                    "surface-tint": "#bec6e0",
+                    "surface-container-high": "#1c2b3c",
+                    "tertiary": "#ffb3ad",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary-fixed-variant": "#004395",
+                    "on-surface-variant": "#c6c6cd",
+                    "error": "#ffb4ab",
+                    "inverse-surface": "#d4e4fa",
+                    "surface-dim": "#051424",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "on-primary-fixed": "#131b2e",
+                    "on-primary": "#283044",
+                    "primary-container": "#0f172a",
+                    "background": "#051424",
+                    "tertiary-container": "#390003",
+                    "surface-container": "#122131"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "12px",
+                    "margin-desktop": "40px",
+                    "stack-lg": "48px",
+                    "container-max": "1280px",
+                    "stack-md": "24px"
+            },
+            "fontFamily": {
+                    "body-md": ["Tajawal"],
+                    "label-md": ["Tajawal"],
+                    "headline-md": ["Cairo"],
+                    "body-lg": ["Tajawal"],
+                    "display-lg": ["Cairo"],
+                    "code-sm": ["jetbrainsMono"],
+                    "headline-sm": ["Cairo"],
+                    "display-lg-mobile": ["Cairo"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-md": ["30px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "code-sm": ["13px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #051424;
+            color: #d4e4fa;
+            scroll-behavior: smooth;
+        }
+        .glass-card {
+            background: rgba(39, 54, 71, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        .glass-header {
+            background: rgba(5, 20, 36, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #bec6e0 0%, #adc6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #0566d9;
+            color: #e6ecff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 right-0 z-50 h-20 glass-header border-b border-outline-variant/20">
+    <nav class="main-nav">
+    <a href="page1.html">الرئيسية</a>
+    <a href="page2.html">الشروحات</a>
+    <a href="../_4/code.html">من نحن</a>
+    <a href="../_5/code.html">اتصل بنا</a>
+</nav>
+<div class="flex flex-row-reverse justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-full">
+<div class="flex items-center gap-4">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">اليوتيوبر المحترف للشروحات SY</span>
+</div>
+<nav class="hidden md:flex flex-row-reverse items-center gap-8">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">الرئيسية</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">الشروحات</a>
+<a class="text-primary border-b-2 border-primary font-bold pb-1 transition-colors duration-200" href="#">من نحن</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">اتصل بنا</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface-variant ml-2">search</span>
+<input class="bg-transparent border-none outline-none text-label-md font-label-md w-32 focus:w-48 transition-all duration-300 placeholder:text-on-surface-variant" placeholder="بحث..." type="text">
+</div>
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+</div>
+<!-- Mobile Menu Trigger -->
+<button class="md:hidden material-symbols-outlined text-primary" onclick="document.getElementById('side-nav').classList.remove('translate-x-full')">menu</button>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Mobile Only) -->
+<aside class="fixed inset-y-0 right-0 z-[60] w-64 bg-surface border-l border-outline-variant/20 shadow-xl transition-transform duration-300 translate-x-full md:hidden" id="side-nav">
+<div class="p-6 flex flex-col h-full">
+<div class="flex justify-between items-center mb-8">
+<span class="font-headline-sm text-primary">اليوتيوبر المحترف</span>
+<button class="material-symbols-outlined text-on-surface-variant" onclick="document.getElementById('side-nav').classList.add('translate-x-full')">close</button>
+</div>
+<div class="space-y-4">
+<a class="flex flex-row-reverse items-center text-on-surface-variant p-3 hover:bg-surface-variant/50 rounded-lg" href="#">
+<span class="mr-3">الرئيسية</span>
+<span class="material-symbols-outlined">home</span>
+</a>
+<a class="flex flex-row-reverse items-center text-on-surface-variant p-3 hover:bg-surface-variant/50 rounded-lg" href="#">
+<span class="mr-3">الشروحات</span>
+<span class="material-symbols-outlined">video_library</span>
+</a>
+<a class="flex flex-row-reverse items-center bg-secondary-container text-on-secondary-container rounded-lg p-3" href="#">
+<span class="mr-3">من نحن</span>
+<span class="material-symbols-outlined">info</span>
+</a>
+<a class="flex flex-row-reverse items-center text-on-surface-variant p-3 hover:bg-surface-variant/50 rounded-lg" href="#">
+<span class="mr-3">اتصل بنا</span>
+<span class="material-symbols-outlined">mail</span>
+</a>
+</div>
+</div>
+</aside>
+<main class="pt-32 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto relative">
+<!-- Animated Background Decor -->
+<div class="absolute top-0 right-0 -z-10 opacity-20 overflow-hidden pointer-events-none">
+
+</div>
+<!-- Hero Section: القصة والأهداف -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-stack-lg items-center mb-32">
+<div class="order-2 lg:order-1">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-stack-md text-gradient leading-tight">
+                    نحن نبني جسراً بينك وبين التكنولوجيا
+                </h1>
+<p class="text-body-lg text-on-surface-variant mb-stack-md leading-relaxed">
+                    بدأت قناة "اليوتيوبر المحترف للشروحات SY" كفكرة طموحة لتبسيط العالم الرقمي المعقد. نحن نؤمن أن التكنولوجيا هي أداة للتمكين، ومهمتنا هي جعل كل مستخدم قادراً على احتراف الأدوات التقنية لخدمة أهدافه الشخصية والمهنية.
+                </p>
+<div class="flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<div class="step-number flex-shrink-0">1</div>
+<div>
+<h3 class="font-headline-sm text-primary mb-1">الرؤية</h3>
+<p class="text-on-surface-variant">أن نكون المرجع الأول والموثوق للمحتوى التقني التعليمي في الوطن العربي.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="step-number flex-shrink-0">2</div>
+<div>
+<h3 class="font-headline-sm text-primary mb-1">القيم</h3>
+<p class="text-on-surface-variant">الدقة في المعلومة، التبسيط في الشرح، والاستمرارية في دعم مجتمعنا التقني.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="order-1 lg:order-2 flex justify-center relative">
+<div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-2xl glass-card p-2 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+<img class="w-full h-full object-cover rounded-lg" data-alt="A futuristic professional recording studio setup with high-end cameras, softbox lighting, and multiple monitors displaying video editing software. The environment is sleek, featuring dark navy and tech blue accent lighting with a clean, glassmorphic design aesthetic that feels high-tech and instructional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOeLq9SQwx2WQimCj5rz1uB_QgXVkXbbLp9z0gmuBjnrRBXc4xbqvFv6p2nBSja-VmfawepL_MBVHiNUEOpQMvd7DELO1CfLHzIR0Dx0hLlk5vA_uWQ27L4P_1U0U-zfm0rO_qYTUhkt2KxlTwIsJB1k_-fptKmmFg3n3F9NPG7CNrAfnWYjbUTApOSrXihx3g7_Rgab9MYhv62ZhdQA1k2K_JehLUPi6eyk8JT9if2TuBjoJiLAvxptjqyFp65dQyq6tMnYZo0Ayk">
+</div>
+<!-- Decorative background elements -->
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-secondary-container/20 blur-3xl rounded-full"></div>
+<div class="absolute -bottom-10 -left-10 w-60 h-60 bg-primary/10 blur-3xl rounded-full"></div>
+</div>
+</section>
+<!-- Creator Section: صانع المحتوى -->
+<section class="mb-32">
+<div class="glass-card rounded-xl p-stack-md md:p-stack-lg overflow-hidden relative">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-md items-center">
+<div class="md:col-span-4 flex justify-center">
+<div class="relative p-1 bg-gradient-to-tr from-primary to-secondary rounded-full">
+<img class="w-48 h-48 md:w-64 md:h-64 object-cover rounded-full border-4 border-surface" data-alt="A professional headshot of a Middle Eastern tech content creator, smiling confidently. He is wearing modern smart-casual attire. The background is a blurred high-tech workspace with soft blue and navy lighting. The portrait is clean, high-resolution, and projects an aura of mentorship and technical expertise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr8HCpayhLPOUoBDHajGIxOTvmPL-pG-4mxMulfbu2oDkWQ7l5EBILZXUJ8ls9b52pFKUAP0sjV1C4YpvUP4zVEUo5UCp14Sm0MAGiEI00wbZm2uLxkujm3LjTXRa-M5PfCVhKuU_I_Tldwv4Z3WZhREaKFaIGz8vS2zBit-n8kwWmX0xZNePwCk7ZKA68jfBkG7EsHv8PenCBy9xFBGPt14oUkSHLQfiQFMf474k_tAH9Pe5jj2MTTB1JWx0bnRn4IfYzk8QlroJC">
+<div class="absolute -bottom-2 -right-2 bg-secondary-container text-on-secondary-container p-3 rounded-full shadow-lg">
+<span class="material-symbols-outlined">verified</span>
+</div>
+</div>
+</div>
+<div class="md:col-span-8 text-center md:text-right">
+<h2 class="font-headline-md text-primary mb-2">كلمة مؤسس القناة</h2>
+<h3 class="text-label-md font-label-md text-secondary-fixed mb-stack-sm tracking-widest uppercase">خبير التقنية والبرمجة</h3>
+<p class="text-body-lg text-on-surface-variant italic mb-stack-md leading-relaxed">
+                            "كل شرح أقدمه هو رحلة نخوضها معاً. غايتي ليست مجرد تقديم خطوات، بل بناء فهم عميق يجعلك تتعامل مع أي تحدي تقني بكل ثقة واحترافية. شكراً لكونكم جزءاً من هذه العائلة."
+                        </p>
+<div class="flex justify-center md:justify-end gap-4">
+<a class="p-2 glass-card rounded-lg text-primary hover:bg-primary hover:text-surface transition-all" href="#">
+<span class="material-symbols-outlined">video_library</span>
+</a>
+<a class="p-2 glass-card rounded-lg text-primary hover:bg-primary hover:text-surface transition-all" href="#">
+<span class="material-symbols-outlined">link</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Achievements: الإنجازات -->
+<section class="mb-20">
+<div class="text-center mb-stack-lg">
+<h2 class="font-headline-md text-primary mb-2">إنجازات نعتز بها</h2>
+<p class="text-on-surface-variant max-w-2xl mx-auto">بالأرقام والجوائز، نثبت دائماً أن المحتوى الهادف يصل إلى القلوب والعقول.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Bento Card 1 -->
+<div class="glass-card p-stack-md rounded-xl text-center group hover:scale-[1.02] transition-transform">
+<div class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl group-hover:text-on-secondary-container">groups</span>
+</div>
+<div class="font-display-lg text-display-lg-mobile text-primary mb-1">+500,000</div>
+<div class="text-label-md text-on-surface-variant">مشترك حقيقي</div>
+</div>
+<!-- Bento Card 2 -->
+<div class="glass-card p-stack-md rounded-xl text-center group hover:scale-[1.02] transition-transform">
+<div class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl group-hover:text-on-secondary-container">play_circle</span>
+</div>
+<div class="font-display-lg text-display-lg-mobile text-primary mb-1">+1,200</div>
+<div class="text-label-md text-on-surface-variant">فيديو تعليمي</div>
+</div>
+<!-- Bento Card 3 -->
+<div class="glass-card p-stack-md rounded-xl text-center group hover:scale-[1.02] transition-transform">
+<div class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl group-hover:text-on-secondary-container">emoji_events</span>
+</div>
+<div class="font-headline-md text-primary mb-1">درع اليوتيوب</div>
+<div class="text-label-md text-on-surface-variant">الفضي والذهبي</div>
+</div>
+<!-- Bento Card 4 -->
+<div class="glass-card p-stack-md rounded-xl text-center group hover:scale-[1.02] transition-transform">
+<div class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl group-hover:text-on-secondary-container">visibility</span>
+</div>
+<div class="font-display-lg text-display-lg-mobile text-primary mb-1">+50M</div>
+<div class="text-label-md text-on-surface-variant">إجمالي المشاهدات</div>
+</div>
+</div>
+</section>
+<!-- Awards Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="glass-card p-8 rounded-xl flex items-center gap-6 border-r-4 border-secondary-container">
+<img class="w-24 h-24 object-cover rounded-lg" data-alt="A shiny gold YouTube Creator Award plaque mounted on a clean, dark textured wall. Cinematic lighting highlights the engraving. Professional tech photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoITI--vRfeLlsJCdgiwiSkeyMzBJXerjxoXIg7KvxvSpqxx_r5GuYscprE_9jJH2st3yVKOByGA_2Uo8KvkHJgCnWAkb19VKqz6OdVSjVoYKZ3_szSOyVQbPDAR3r946ozfY4lFm6lRfvHfKSdKzkgj5a4YAb9vfuX7FS5igagcfVsXQiZEEOXP6yXw6M4F5VgpcgE0CDMz2T0kna9OiZPUtpBGJ0iRnoqyxCzQwwIn-9tw5OfoFDL5cSPqyETcXYsBZ1UVr9FrgC">
+<div>
+<h3 class="font-headline-sm text-primary mb-1">الدرع الذهبي</h3>
+<p class="text-on-surface-variant">تم استحقاقه لتجاوز عتبة المليون متابع كأسرع قناة تعليمية نمواً في عام 2023.</p>
+</div>
+</div>
+<div class="glass-card p-8 rounded-xl flex items-center gap-6 border-r-4 border-on-tertiary-container">
+<img class="w-24 h-24 object-cover rounded-lg" data-alt="A crystal award trophy for digital education excellence, glowing under professional studio spotlights. The atmosphere is high-end and celebratory, reflecting technological achievement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkxaRaWL-BbzfY054xKn9jzTHgvsUDEd8VvQhG7U6pkx5R0kRAAIby3vwLopvLGq-6B4fwCQQAIo2jtEbylDQB7bVp9pjW6__JZet8x3IeruKtC7CWUwL0D9VE7Dh-d1ElcJaqMEW7Zy8zKfC0sOXCMi0LYgvHZFW8GJnihcOVMwq07qwkygvCV2PUjk-UIr9Abln1Kaga46CEL_lEW-hEb2QVczjCEVrqoPQGZ1Oz_T2JqZBs7POGA1A8q6ISl1O0jpaf26F0G_sc">
+<div>
+<h3 class="font-headline-sm text-primary mb-1">جائزة التميز الرقمي</h3>
+<p class="text-on-surface-variant">أفضل محتوى تقني لعام 2022 في ملتقى صناع المحتوى العربي.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-lg px-margin-desktop flex flex-col items-center space-y-stack-md border-t border-outline-variant/10 bg-surface-container-lowest">
+<div class="flex flex-col items-center gap-4">
+<span class="font-headline-sm text-primary">اليوتيوبر المحترف للشروحات SY</span>
+<div class="flex gap-6">
+<a class="text-on-surface-variant hover:text-secondary transition-colors material-symbols-outlined" href="#">brand_youtube</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors material-symbols-outlined" href="#">brand_telegram</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors material-symbols-outlined" href="#">alternate_email</a>
+</div>
+</div>
+<div class="flex flex-wrap justify-center gap-stack-md">
+<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">سياسة الخصوصية</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">شروط الاستخدام</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">الأرشيف</a>
+</div>
+<p class="text-body-md text-on-surface-variant/60 text-center">
+            © 2024 اليوتيوبر المحترف للشروحات SY. جميع الحقوق محفوظة.
+        </p>
+</footer>
+<script>
+        // Simple Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+            observer.observe(section);
+        });
+    </script>
+</body></html>

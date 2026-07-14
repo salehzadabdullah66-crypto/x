@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قلعة حلب | Citadel of Aleppo</title>
+<meta name="description" content="موقع رسمي تفاعلي ثلاثي الأبعاد لقلعة حلب — تاريخ، جولة افتراضية، معرض، وأحداث">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+/* ===================================================================
+   THE ASCENT — design tokens
+   Palette: honeyed limestone, deep basalt night, aged brass, parchment
+   =================================================================== */
+:root{
+  --basalt-950:#15110d;
+  --basalt-900:#1f1912;
+  --basalt-800:#2b2118;
+  --basalt-700:#3a2c1e;
+  --stone-honey:#c9a876;
+  --stone-deep:#8b6f47;
+  --brass:#c68a3d;
+  --brass-bright:#e0a94f;
+  --parchment:#ede3d3;
+  --parchment-dim:#c9bfae;
+  --sky-dusk-1:#2c1f18;
+  --sky-dusk-2:#402a1e;
+  --sky-night:#151c27;
+  --ok:#9fbf8f;
+  --err:#c1654f;
+
+  --display-ar:'Amiri', 'Cormorant Garamond', serif;
+  --body-ar:'Cairo', 'Inter', sans-serif;
+  --display-en:'Cormorant Garamond', serif;
+  --body-en:'Inter', sans-serif;
+  --mono:'JetBrains Mono', monospace;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--basalt-950);
+  color:var(--parchment);
+  font-family:var(--body-ar);
+  overflow-x:hidden;
+  cursor:none;
+}
+body.en{font-family:var(--body-en);}
+::selection{background:var(--brass); color:var(--basalt-950);}
+
+h1,h2,h3,.display{font-family:var(--display-ar); font-weight:700;}
+body.en h1, body.en h2, body.en h3, body.en .display{font-family:var(--display-en);}
+
+/* ---------- custom cursor ---------- */
+#cursor{
+  position:fixed; width:22px; height:22px; border:1px solid var(--brass-bright);
+  border-radius:50%; pointer-events:none; z-index:9999; transition:transform .15s ease, opacity .3s;
+  transform:translate(-50%,-50%); mix-blend-mode:screen;
+}
+#cursor-dot{
+  position:fixed; width:4px; height:4px; background:var(--brass-bright); border-radius:50%;
+  pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
+}
+@media (hover:none){ #cursor,#cursor-dot{display:none;} body{cursor:auto;} }
+
+/* ---------- loader ---------- */
+#loader{
+  position:fixed; inset:0; background:var(--basalt-950); z-index:10000;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+  transition:opacity .8s ease, visibility .8s;
+}
+#loader .mark{
+  width:52px;height:52px;border:1px solid var(--brass); transform:rotate(45deg);
+  position:relative;
+}
+#loader .mark::after{
+  content:''; position:absolute; inset:8px; border:1px solid var(--stone-honey); opacity:.6;
+}
+#loader p{letter-spacing:.3em; font-size:11px; color:var(--parchment-dim); font-family:var(--mono); text-transform:uppercase;}
+#loader .bar{width:180px; height:1px; background:rgba(237,227,211,.15); overflow:hidden;}
+#loader .bar span{display:block; height:100%; width:0%; background:var(--brass-bright);}
+#loader.hidden{opacity:0; visibility:hidden;}
+
+/* ---------- ascent tracker (signature element) ---------- */
+#ascent{
+  position:fixed; inset-inline-end:22px; top:0; height:100vh; width:34px; z-index:500;
+  display:flex; align-items:center; pointer-events:none;
+}
+#ascent svg{height:70vh; width:100%;}
+#ascent .lantern{ filter:drop-shadow(0 0 6px var(--brass-bright)); }
+#ascent .label{
+  position:absolute; bottom:6vh; inset-inline-end:6px; font-family:var(--mono); font-size:10px;
+  color:var(--parchment-dim); letter-spacing:.15em; writing-mode:vertical-rl;
+}
+@media (max-width:820px){ #ascent{display:none;} }
+
+/* ---------- nav ---------- */
+header{
+  position:fixed; top:0; inset-inline:0; z-index:900; padding:18px 5vw;
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(21,17,13,.15); backdrop-filter:blur(0px); -webkit-backdrop-filter:blur(0px);
+  border-bottom:1px solid rgba(198,138,61,0); transition:background .4s, backdrop-filter .4s, border-color .4s;
+}
+header.scrolled{
+  background:rgba(21,17,13,.55); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-color:rgba(198,138,61,.25);
+}
+.logo{display:flex; align-items:center; gap:10px; font-family:var(--display-ar); font-size:1.3rem; letter-spacing:.03em;}
+body.en .logo{font-family:var(--display-en);}
+.logo .glyph{width:26px;height:26px;border:1px solid var(--brass); transform:rotate(45deg);}
+nav ul{list-style:none; display:flex; gap:2.1vw;}
+nav a{
+  color:var(--parchment-dim); text-decoration:none; font-size:.82rem; letter-spacing:.05em;
+  position:relative; padding-bottom:4px; transition:color .3s;
+}
+nav a::after{content:'';position:absolute;bottom:0;inset-inline-start:0;width:0;height:1px;background:var(--brass-bright);transition:width .35s ease;}
+nav a:hover{color:var(--parchment);}
+nav a:hover::after{width:100%;}
+.nav-right{display:flex; align-items:center; gap:18px;}
+#lang-toggle{
+  border:1px solid var(--brass); background:transparent; color:var(--parchment);
+  font-family:var(--mono); font-size:.72rem; padding:6px 12px; letter-spacing:.1em;
+  cursor:pointer; transition:background .3s,color .3s;
+}
+#lang-toggle:hover{background:var(--brass); color:var(--basalt-950);}
+#nav-toggle{display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer;}
+#nav-toggle span{width:22px;height:1px;background:var(--parchment);}
+@media (max-width:980px){
+  nav{position:fixed; top:0; inset-inline-end:0; height:100vh; width:78vw; max-width:340px;
+      background:var(--basalt-900); transform:translateX(100%); transition:transform .45s ease;
+      display:flex; align-items:center; padding:0 8vw; border-inline-start:1px solid var(--stone-deep);}
+  [dir="rtl"] nav{transform:translateX(-100%);}
+  nav.open{transform:translateX(0);}
+  nav ul{flex-direction:column; gap:26px;}
+  #nav-toggle{display:flex;}
+}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative; height:100vh; width:100%; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+}
+#hero-canvas{position:absolute; inset:0; z-index:0;}
+.hero-sky{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 78%, var(--sky-dusk-2) 0%, var(--sky-dusk-1) 38%, var(--sky-night) 78%);
+  mix-blend-mode:multiply; opacity:.85;
+}
+.hero-vignette{position:absolute; inset:0; z-index:2; pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(21,17,13,.75) 100%);}
+.hero-content{position:relative; z-index:3; padding:0 6vw;}
+.eyebrow{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.4em; color:var(--brass-bright);
+  text-transform:uppercase; margin-bottom:22px; display:block;
+}
+.hero h1{
+  font-size:clamp(3rem,9vw,7.2rem); line-height:1.05; color:var(--parchment);
+  text-shadow:0 4px 40px rgba(0,0,0,.6);
+}
+.hero h1 em{font-style:normal; color:var(--brass-bright);}
+.hero p.sub{
+  font-size:clamp(1rem,1.6vw,1.25rem); color:var(--parchment-dim); max-width:640px; margin:26px auto 0;
+  font-family:var(--body-ar); font-weight:300; line-height:1.9;
+}
+body.en .hero p.sub{font-family:var(--body-en);}
+.hero-cta{
+  margin-top:46px; display:inline-flex; align-items:center; gap:14px; padding:16px 34px;
+  border:1px solid var(--brass); color:var(--parchment); text-decoration:none; letter-spacing:.08em;
+  font-size:.85rem; position:relative; overflow:hidden; transition:color .4s;
+}
+.hero-cta::before{
+  content:''; position:absolute; inset:0; background:var(--brass); transform:scaleX(0);
+  transform-origin:right; transition:transform .5s cubic-bezier(.7,0,.2,1); z-index:-1;
+}
+[dir="ltr"] .hero-cta::before{transform-origin:left;}
+.hero-cta:hover{color:var(--basalt-950);}
+.hero-cta:hover::before{transform:scaleX(1);}
+.scroll-cue{
+  position:absolute; bottom:38px; left:50%; transform:translateX(-50%); z-index:3;
+  font-family:var(--mono); font-size:.65rem; letter-spacing:.3em; color:var(--parchment-dim);
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.scroll-cue .line{width:1px;height:44px;background:linear-gradient(var(--brass-bright),transparent); animation:pulse-line 2s ease-in-out infinite;}
+@keyframes pulse-line{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ---------- generic section chrome ---------- */
+section{position:relative; padding:150px 6vw; max-width:1400px; margin:0 auto;}
+.section-head{max-width:720px; margin-bottom:80px;}
+.section-head .eyebrow{color:var(--brass-bright);}
+.section-head h2{font-size:clamp(2.1rem,4.4vw,3.6rem); color:var(--parchment); margin-top:6px;}
+.section-head p{color:var(--parchment-dim); margin-top:20px; line-height:1.9; font-weight:300;}
+.divider{width:60px; height:1px; background:var(--brass); margin:26px 0;}
+[data-reveal]{opacity:0; transform:translateY(40px); transition:opacity 1s ease, transform 1s ease;}
+[data-reveal].in{opacity:1; transform:translateY(0);}
+
+/* ---------- history timeline ---------- */
+#history{background:linear-gradient(180deg, var(--basalt-950), var(--basalt-900));}
+.timeline{position:relative; padding-inline-start:40px;}
+.timeline::before{content:'';position:absolute; inset-inline-start:0; top:0; bottom:0; width:1px; background:linear-gradient(var(--brass),transparent 95%);}
+.t-item{position:relative; padding:0 0 70px 40px; }
+[dir="rtl"] .t-item{padding:0 40px 70px 0;}
+.t-item::before{
+  content:''; position:absolute; inset-inline-start:-45px; top:6px; width:9px; height:9px; border-radius:50%;
+  background:var(--basalt-950); border:1px solid var(--brass-bright);
+}
+.t-item .year{font-family:var(--mono); color:var(--brass-bright); font-size:.85rem; letter-spacing:.1em;}
+.t-item h3{font-size:1.5rem; margin:10px 0 12px; color:var(--parchment);}
+.t-item p{color:var(--parchment-dim); font-weight:300; line-height:1.85; max-width:620px;}
+
+/* ---------- 3D tour ---------- */
+#tour{background:var(--basalt-900);}
+.tour-wrap{display:grid; grid-template-columns:1.3fr .9fr; gap:60px; align-items:center;}
+@media (max-width:900px){.tour-wrap{grid-template-columns:1fr;}}
+.tour-stage{
+  position:relative; aspect-ratio:4/3; border:1px solid var(--stone-deep);
+  background:radial-gradient(ellipse at 50% 30%, var(--sky-dusk-2), var(--basalt-950));
+  overflow:hidden;
+}
+#tour-canvas{position:absolute; inset:0;}
+.tour-hotspot{
+  position:absolute; width:16px; height:16px; border:1px solid var(--brass-bright); border-radius:50%;
+  cursor:pointer; z-index:5;
+}
+.tour-hotspot::after{content:'';position:absolute; inset:4px; background:var(--brass-bright); border-radius:50%; animation:ping 2s ease-out infinite;}
+@keyframes ping{0%{transform:scale(1); opacity:1;}100%{transform:scale(2.6); opacity:0;}}
+.tour-info{list-style:none;}
+.tour-info li{
+  padding:20px 0; border-bottom:1px solid rgba(198,138,61,.2); cursor:pointer; transition:padding-inline-start .3s;
+}
+.tour-info li:hover, .tour-info li.active{padding-inline-start:14px;}
+.tour-info li .num{font-family:var(--mono); color:var(--brass-bright); font-size:.75rem; margin-inline-end:12px;}
+.tour-info li h4{display:inline; font-size:1.15rem; color:var(--parchment);}
+.tour-info li p{margin-top:8px; color:var(--parchment-dim); font-weight:300; font-size:.92rem; line-height:1.7; display:none;}
+.tour-info li.active p{display:block;}
+.tour-caption{margin-top:18px; font-family:var(--mono); font-size:.72rem; color:var(--parchment-dim); letter-spacing:.05em;}
+
+/* ---------- 360 model viewer ---------- */
+#model360{background:linear-gradient(180deg, var(--basalt-900), var(--basalt-950)); text-align:center;}
+.viewer-stage{
+  position:relative; width:100%; aspect-ratio:16/8; border:1px solid var(--stone-deep);
+  background:radial-gradient(ellipse at 50% 30%, var(--sky-dusk-2), var(--basalt-950));
+  overflow:hidden; margin-top:20px; touch-action:none;
+}
+.viewer-stage.grabbing{cursor:grabbing !important;}
+#model360-canvas{position:absolute; inset:0; cursor:grab;}
+.viewer-controls{
+  display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:26px;
+}
+.view-btn{
+  border:1px solid var(--stone-deep); background:rgba(198,138,61,.05); color:var(--parchment-dim);
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; padding:9px 18px; cursor:pointer;
+  transition:border-color .3s, color .3s, background .3s;
+}
+.view-btn:hover, .view-btn.active{border-color:var(--brass-bright); color:var(--parchment); background:rgba(198,138,61,.15);}
+.viewer-hint{
+  position:absolute; top:16px; inset-inline-start:16px; font-family:var(--mono); font-size:.68rem;
+  color:var(--parchment-dim); letter-spacing:.05em; opacity:.8; pointer-events:none;
+}
+.viewer-zoom{
+  position:absolute; bottom:16px; inset-inline-end:16px; display:flex; flex-direction:column; gap:6px;
+}
+.viewer-zoom button{
+  width:30px; height:30px; border:1px solid var(--stone-deep); background:rgba(21,17,13,.6); color:var(--parchment);
+  cursor:pointer; font-size:1rem; line-height:1;
+}
+.viewer-zoom button:hover{border-color:var(--brass-bright);}
+
+/* ---------- gallery ---------- */
+#gallery{background:linear-gradient(180deg, var(--basalt-900), var(--basalt-950));}
+.masonry{columns:3 220px; column-gap:18px;}
+@media (max-width:700px){.masonry{columns:1 220px;}}
+.g-tile{
+  break-inside:avoid; margin-bottom:18px; position:relative; overflow:hidden; cursor:pointer;
+  border:1px solid rgba(198,138,61,.18);
+}
+.g-tile .swatch{
+  width:100%; display:block; position:relative;
+}
+.g-tile .swatch::before{content:''; display:block; padding-top:var(--ar, 75%);}
+.g-tile .swatch .fill{position:absolute; inset:0; transition:transform .7s ease;}
+.g-tile:hover .fill{transform:scale(1.08);}
+.g-tile .cap{
+  position:absolute; bottom:0; inset-inline:0; padding:14px 16px; font-size:.78rem;
+  background:linear-gradient(0deg, rgba(21,17,13,.9), transparent); color:var(--parchment-dim);
+  transform:translateY(100%); transition:transform .4s ease;
+}
+.g-tile:hover .cap{transform:translateY(0);}
+/* lightbox */
+#lightbox{position:fixed; inset:0; background:rgba(15,12,9,.94); z-index:2000; display:none; align-items:center; justify-content:center; padding:6vw;}
+#lightbox.open{display:flex;}
+#lightbox .frame{max-width:800px; width:100%; border:1px solid var(--brass);}
+#lightbox .swatch{width:100%; aspect-ratio:16/10;}
+#lightbox .cap2{padding:16px; color:var(--parchment-dim); font-size:.85rem; font-family:var(--mono);}
+#lightbox .close{position:absolute; top:26px; inset-inline-end:34px; color:var(--parchment); font-size:1.6rem; cursor:pointer; background:none; border:none;}
+
+/* ---------- stats ---------- */
+#stats{background:var(--basalt-950); border-top:1px solid rgba(198,138,61,.15); border-bottom:1px solid rgba(198,138,61,.15);}
+.stat-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:30px; text-align:center;}
+@media (max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+.stat b{
+  display:block; font-family:var(--mono); font-size:clamp(2rem,4vw,3.2rem); color:var(--brass-bright); font-weight:600;
+}
+.stat span{font-size:.75rem; letter-spacing:.1em; color:var(--parchment-dim); text-transform:uppercase;}
+
+/* ---------- location ---------- */
+#location{background:var(--basalt-900);}
+.loc-wrap{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+@media (max-width:900px){.loc-wrap{grid-template-columns:1fr;}}
+.map-card{
+  aspect-ratio:4/3; border:1px solid var(--stone-deep); position:relative; overflow:hidden;
+  background:
+    linear-gradient(rgba(198,138,61,.08) 1px, transparent 1px) 0 0/34px 34px,
+    linear-gradient(90deg, rgba(198,138,61,.08) 1px, transparent 1px) 0 0/34px 34px,
+    radial-gradient(circle at 55% 45%, var(--sky-dusk-1), var(--basalt-950));
+}
+.map-pin{
+  position:absolute; top:45%; left:55%; width:14px; height:14px; background:var(--brass-bright);
+  border-radius:50% 50% 50% 0; transform:rotate(-45deg); box-shadow:0 0 20px var(--brass-bright);
+}
+.map-link{
+  margin-top:22px; display:inline-flex; gap:10px; color:var(--brass-bright); text-decoration:none;
+  border-bottom:1px solid var(--brass-bright); font-size:.85rem; padding-bottom:2px;
+}
+.loc-list{list-style:none;}
+.loc-list li{padding:16px 0; border-bottom:1px solid rgba(198,138,61,.15); color:var(--parchment-dim); font-weight:300;}
+.loc-list li b{color:var(--parchment); font-weight:600; display:block; margin-bottom:4px; font-family:var(--mono); font-size:.75rem; letter-spacing:.08em;}
+
+/* ---------- contact ---------- */
+#contact{background:linear-gradient(180deg, var(--basalt-900), var(--basalt-950));}
+form{display:grid; gap:26px; max-width:640px;}
+.field{position:relative;}
+.field input, .field textarea{
+  width:100%; background:transparent; border:none; border-bottom:1px solid rgba(198,138,61,.35);
+  color:var(--parchment); font-family:var(--body-ar); font-size:1rem; padding:12px 2px; outline:none;
+  transition:border-color .3s;
+}
+body.en .field input, body.en .field textarea{font-family:var(--body-en);}
+.field textarea{resize:vertical; min-height:100px;}
+.field label{
+  position:absolute; top:12px; inset-inline-start:2px; color:var(--parchment-dim); pointer-events:none;
+  transition:all .25s ease; font-size:1rem;
+}
+.field input:focus, .field textarea:focus{border-color:var(--brass-bright);}
+.field input:focus + label, .field input:not(:placeholder-shown) + label,
+.field textarea:focus + label, .field textarea:not(:placeholder-shown) + label{
+  top:-14px; font-size:.7rem; letter-spacing:.08em; color:var(--brass-bright);
+}
+.field .msg{font-size:.75rem; margin-top:6px; min-height:14px; color:var(--err);}
+.submit-btn{
+  justify-self:start; padding:15px 40px; background:var(--brass); color:var(--basalt-950); border:none;
+  font-size:.85rem; letter-spacing:.08em; cursor:pointer; transition:background .3s;
+}
+.submit-btn:hover{background:var(--brass-bright);}
+#form-status{font-family:var(--mono); font-size:.8rem; margin-top:14px; display:none;}
+#form-status.ok{color:var(--ok); display:block;}
+
+/* ---------- footer ---------- */
+footer{
+  background:var(--basalt-950); border-top:1px solid rgba(198,138,61,.15); padding:70px 6vw 30px;
+}
+.foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:50px; max-width:1400px; margin:0 auto;}
+@media (max-width:800px){.foot-grid{grid-template-columns:1fr;}}
+.foot-grid h4{font-size:.78rem; letter-spacing:.12em; color:var(--brass-bright); text-transform:uppercase; margin-bottom:18px;}
+.foot-grid ul{list-style:none;}
+.foot-grid a{color:var(--parchment-dim); text-decoration:none; font-size:.9rem; line-height:2.4;}
+.foot-grid a:hover{color:var(--parchment);}
+.social-row{display:flex; gap:14px; margin-top:10px;}
+.social-row a{
+  width:36px;height:36px; border:1px solid var(--stone-deep); display:flex; align-items:center; justify-content:center;
+  border-radius:50%; font-size:.8rem;
+}
+.foot-bottom{
+  max-width:1400px; margin:60px auto 0; padding-top:24px; border-top:1px solid rgba(198,138,61,.1);
+  display:flex; justify-content:space-between; align-items:center; font-size:.78rem; color:var(--parchment-dim);
+  flex-wrap:wrap; gap:14px;
+}
+#to-top{
+  border:1px solid var(--brass); width:38px;height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  color:var(--parchment); text-decoration:none; transition:background .3s, color .3s;
+}
+#to-top:hover{background:var(--brass); color:var(--basalt-950);}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
+
+<div id="loader">
+  <div class="mark"></div>
+  <div class="bar"><span id="loader-bar"></span></div>
+  <p data-ar="جاري تحميل القلعة" data-en="Raising the citadel">جاري تحميل القلعة</p>
+</div>
+
+<!-- signature ascent tracker -->
+<div id="ascent" aria-hidden="true">
+  <svg viewBox="0 0 34 400" preserveAspectRatio="none">
+    <path d="M17 0 L17 400" stroke="rgba(198,138,61,.25)" stroke-width="1"/>
+    <path id="ascent-fill" d="M17 0 L17 0" stroke="var(--brass-bright)" stroke-width="1"/>
+    <circle id="ascent-dot" class="lantern" cx="17" cy="0" r="4" fill="#e0a94f"/>
+  </svg>
+  <span class="label" data-ar="مسار الصعود" data-en="THE ASCENT">مسار الصعود</span>
+</div>
+
+<header id="site-header">
+  <div class="logo"><span class="glyph"></span><span data-ar="قلعة حلب" data-en="Citadel of Aleppo">قلعة حلب</span></div>
+  <nav id="nav-menu">
+    <ul>
+      <li><a href="#home" data-ar="الرئيسية" data-en="Home">الرئيسية</a></li>
+      <li><a href="#history" data-ar="تاريخ القلعة" data-en="History">تاريخ القلعة</a></li>
+      <li><a href="#tour" data-ar="الجولة ثلاثية الأبعاد" data-en="3D Tour">الجولة ثلاثية الأبعاد</a></li>
+      <li><a href="#model360" data-ar="نموذج ٣٦٠°" data-en="360° Model">نموذج ٣٦٠°</a></li>
+      <li><a href="#gallery" data-ar="المعرض" data-en="Gallery">المعرض</a></li>
+      <li><a href="#stats" data-ar="أرقام وحقائق" data-en="Facts">أرقام وحقائق</a></li>
+      <li><a href="#location" data-ar="الموقع" data-en="Location">الموقع</a></li>
+      <li><a href="#contact" data-ar="تواصل معنا" data-en="Contact">تواصل معنا</a></li>
+    </ul>
+  </nav>
+  <div class="nav-right">
+    <button id="lang-toggle">EN</button>
+    <button id="nav-toggle" aria-label="menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-sky"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <span class="eyebrow" style="display:flex; align-items:center; justify-content:center; gap:10px;">
+      <svg width="26" height="17" viewBox="0 0 90 60" aria-hidden="true" style="flex-shrink:0;">
+        <rect x="0" y="0" width="90" height="20" fill="#1E7A3D"/>
+        <rect x="0" y="20" width="90" height="20" fill="#FFFFFF"/>
+        <rect x="0" y="40" width="90" height="20" fill="#000000"/>
+        <g fill="#CE1126">
+          <polygon points="0,-4.2 0.97,-1.34 4.0,-1.30 1.57,0.51 2.47,3.40 0,1.65 -2.47,3.40 -1.57,0.51 -4.0,-1.30 -0.97,-1.34" transform="translate(28.5,30) scale(1.25)"/>
+          <polygon points="0,-4.2 0.97,-1.34 4.0,-1.30 1.57,0.51 2.47,3.40 0,1.65 -2.47,3.40 -1.57,0.51 -4.0,-1.30 -0.97,-1.34" transform="translate(45,30) scale(1.25)"/>
+          <polygon points="0,-4.2 0.97,-1.34 4.0,-1.30 1.57,0.51 2.47,3.40 0,1.65 -2.47,3.40 -1.57,0.51 -4.0,-1.30 -0.97,-1.34" transform="translate(61.5,30) scale(1.25)"/>
+        </g>
+      </svg>
+      <span data-ar="حلب، سورية — منذ الألف الثالث ق.م" data-en="ALEPPO, SYRIA — SINCE THE 3RD MILLENNIUM BCE">حلب، سورية — منذ الألف الثالث ق.م</span>
+    </span>
+    <h1 data-ar='قلعة <em>حلب</em>' data-en='Citadel of <em>Aleppo</em>'>قلعة <em>حلب</em></h1>
+    <p class="sub" data-ar="حصنٌ يعلو تلّةً صناعية قديمة، شاهدٌ على أربعة آلاف عام من الحضارات المتعاقبة على مدينة حلب. تجوّل عبر أبراجه وأسواره في تجربة ثلاثية الأبعاد تفاعلية." data-en="A fortress crowning an ancient man-made hill, witness to four thousand years of civilizations in Aleppo. Walk its towers and ramparts in an interactive 3D experience.">
+      حصنٌ يعلو تلّةً صناعية قديمة، شاهدٌ على أربعة آلاف عام من الحضارات المتعاقبة على مدينة حلب. تجوّل عبر أبراجه وأسواره في تجربة ثلاثية الأبعاد تفاعلية.
+    </p>
+    <a href="#tour" class="hero-cta"><span data-ar="استكشف القلعة" data-en="Explore the Citadel">استكشف القلعة</span> →</a>
+  </div>
+  <div class="scroll-cue"><span data-ar="مرّر للأسفل" data-en="SCROLL">مرّر للأسفل</span><div class="line"></div></div>
+</section>
+
+<!-- ================= HISTORY ================= -->
+<section id="history">
+  <div class="section-head" data-reveal>
+    <span class="eyebrow" data-ar="طبقات الزمن" data-en="LAYERS OF TIME">طبقات الزمن</span>
+    <h2 data-ar="تاريخ القلعة" data-en="History of the Citadel">تاريخ القلعة</h2>
+    <div class="divider"></div>
+    <p data-ar="من معبد آرامي على القمة إلى قلعة أيوبية منيعة، مرّت القلعة بطبقات متعاقبة من البناء والتحصين." data-en="From an Aramaean temple on the summit to an impregnable Ayyubid stronghold, the citadel grew through successive layers of construction and fortification.">من معبد آرامي على القمة إلى قلعة أيوبية منيعة، مرّت القلعة بطبقات متعاقبة من البناء والتحصين.</p>
+  </div>
+  <div class="timeline">
+    <div class="t-item" data-reveal>
+      <span class="year">٣٠٠٠ ق.م</span>
+      <h3 data-ar="التلّة المقدسة" data-en="The Sacred Mound">التلّة المقدسة</h3>
+      <p data-ar="أقدم آثار الاستيطان على التلّة، وأدلة على معبد آرامي مخصص لعبادة الإله حدد." data-en="The earliest traces of settlement on the mound, with evidence of an Aramaean temple dedicated to the storm god Hadad.">أقدم آثار الاستيطان على التلّة، وأدلة على معبد آرامي مخصص لعبادة الإله حدد.</p>
+    </div>
+    <div class="t-item" data-reveal>
+      <span class="year">٣٣٣ ق.م</span>
+      <h3 data-ar="العصر الهلنستي والروماني" data-en="Hellenistic & Roman Era">العصر الهلنستي والروماني</h3>
+      <p data-ar="تحصينات إضافية خلال الحكم اليوناني والروماني، مع بقاء التلّة مركزًا دفاعيًا للمدينة." data-en="Further fortifications under Greek and Roman rule, with the mound remaining the city's defensive heart.">تحصينات إضافية خلال الحكم اليوناني والروماني، مع بقاء التلّة مركزًا دفاعيًا للمدينة.</p>
+    </div>
+    <div class="t-item" data-reveal>
+      <span class="year">١١٨٣ م</span>
+      <h3 data-ar="صلاح الدين الأيوبي" data-en="Saladin's Reconstruction">صلاح الدين الأيوبي</h3>
+      <p data-ar="أعاد صلاح الدين وابنه الملك الظاهر غازي بناء القلعة على نطاق واسع، فشيّدا الأسوار والبوابة الحالية." data-en="Saladin and his son al-Zahir Ghazi rebuilt the citadel extensively, raising the ramparts and the present gate.">أعاد صلاح الدين وابنه الملك الظاهر غازي بناء القلعة على نطاق واسع، فشيّدا الأسوار والبوابة الحالية.</p>
+    </div>
+    <div class="t-item" data-reveal>
+      <span class="year">١٢٦٠ م</span>
+      <h3 data-ar="الغزو المغولي" data-en="Mongol Siege">الغزو المغولي</h3>
+      <p data-ar="تعرّضت القلعة لحصار المغول، وأُعيد ترميمها لاحقًا في العهد المملوكي بتحصينات أشد صلابة." data-en="The citadel withstood a Mongol siege, later restored under Mamluk rule with even sturdier fortifications.">تعرّضت القلعة لحصار المغول، وأُعيد ترميمها لاحقًا في العهد المملوكي بتحصينات أشد صلابة.</p>
+    </div>
+    <div class="t-item" data-reveal>
+      <span class="year">١٩٨٦ م</span>
+      <h3 data-ar="تراث عالمي" data-en="World Heritage">تراث عالمي</h3>
+      <p data-ar="أُدرجت المدينة القديمة في حلب، وضمنها القلعة، على قائمة التراث العالمي لليونسكو." data-en="The Ancient City of Aleppo, including the citadel, was inscribed on the UNESCO World Heritage list.">أُدرجت المدينة القديمة في حلب، وضمنها القلعة، على قائمة التراث العالمي لليونسكو.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3D TOUR ================= -->
+<section id="tour">
+  <div class="section-head" data-reveal>
+    <span class="eyebrow" data-ar="تجربة تفاعلية" data-en="INTERACTIVE EXPERIENCE">تجربة تفاعلية</span>
+    <h2 data-ar="الجولة ثلاثية الأبعاد" data-en="The 3D Tour">الجولة ثلاثية الأبعاد</h2>
+    <div class="divider"></div>
+    <p data-ar="اسحب لتدوير النموذج، واختر محطّة من القائمة لتحريك الكاميرا نحوها والاطّلاع على تفاصيلها." data-en="Drag to rotate the model, or pick a station from the list to fly the camera there and reveal its details.">اسحب لتدوير النموذج، واختر محطّة من القائمة لتحريك الكاميرا نحوها والاطّلاع على تفاصيلها.</p>
+  </div>
+  <div class="tour-wrap">
+    <div class="tour-stage">
+      <canvas id="tour-canvas"></canvas>
+    </div>
+    <div>
+      <ul class="tour-info" id="tour-list">
+        <li class="active" data-station="0"><span class="num">01</span><h4 data-ar="جسر المدخل" data-en="Entrance Bridge">جسر المدخل</h4>
+          <p data-ar="جسر حجري مرتفع يربط المدينة بالبوابة الرئيسية، مصمّم لمنع اقتراب آلات الحصار." data-en="A raised stone bridge linking the city to the main gate, designed to keep siege engines at bay.">جسر حجري مرتفع يربط المدينة بالبوابة الرئيسية، مصمّم لمنع اقتراب آلات الحصار.</p></li>
+        <li data-station="1"><span class="num">02</span><h4 data-ar="البوابة المدرّجة" data-en="The Stepped Gate">البوابة المدرّجة</h4>
+          <p data-ar="ممر متعرّج داخل البوابة يضم عدّة زوايا حادة، صُمم لإبطاء أي جيش مهاجم." data-en="A zigzagging passage inside the gate with sharp turns, engineered to slow any attacking force.">ممر متعرّج داخل البوابة يضم عدّة زوايا حادة، صُمم لإبطاء أي جيش مهاجم.</p></li>
+        <li data-station="2"><span class="num">03</span><h4 data-ar="الأبراج الدفاعية" data-en="Defensive Towers">الأبراج الدفاعية</h4>
+          <p data-ar="سلسلة من الأبراج المحيطة بالسور الخارجي، كانت تستخدم للمراقبة والرمي." data-en="A ring of towers along the outer wall, once used for watch and archery.">سلسلة من الأبراج المحيطة بالسور الخارجي، كانت تستخدم للمراقبة والرمي.</p></li>
+        <li data-station="3"><span class="num">04</span><h4 data-ar="الجامع الكبير للقلعة" data-en="The Citadel's Great Mosque">الجامع الكبير للقلعة</h4>
+          <p data-ar="مسجد أثري في قلب القلعة، يعود بناؤه إلى العصر الأيوبي." data-en="A historic mosque at the citadel's heart, dating to the Ayyubid period.">مسجد أثري في قلب القلعة، يعود بناؤه إلى العصر الأيوبي.</p></li>
+      </ul>
+      <div class="tour-caption" data-ar="التحكم: اسحب للدوران — استخدم عجلة الفأرة للتكبير" data-en="Controls: drag to orbit — scroll to zoom">التحكم: اسحب للدوران — استخدم عجلة الفأرة للتكبير</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 360° MODEL VIEWER ================= -->
+<section id="model360">
+  <div class="section-head" style="margin:0 auto 0; text-align:center;" data-reveal>
+    <span class="eyebrow" data-ar="من كل الجهات" data-en="FROM EVERY SIDE">من كل الجهات</span>
+    <h2 data-ar="نموذج القلعة ثلاثي الأبعاد" data-en="The Citadel in 3D">نموذج القلعة ثلاثي الأبعاد</h2>
+    <div class="divider" style="margin-inline:auto;"></div>
+    <p data-ar="دوّر النموذج بحرّية في كل الاتجاهات، أو استخدم أزرار المناظر الجاهزة للانتقال السريع بين الجهة الأمامية والخلفية والجانبين والأعلى." data-en="Rotate the model freely in every direction, or use the preset view buttons to jump between front, back, side, and top angles.">دوّر النموذج بحرّية في كل الاتجاهات، أو استخدم أزرار المناظر الجاهزة للانتقال السريع بين الجهة الأمامية والخلفية والجانبين والأعلى.</p>
+  </div>
+  <div class="viewer-stage" id="viewer-stage">
+    <canvas id="model360-canvas"></canvas>
+    <span class="viewer-hint" data-ar="اسحب للتدوير الحرّ — عجلة الفأرة للتكبير" data-en="Drag to free-orbit — scroll to zoom">اسحب للتدوير الحرّ — عجلة الفأرة للتكبير</span>
+    <div class="viewer-zoom">
+      <button id="zoom-in" aria-label="zoom in">+</button>
+      <button id="zoom-out" aria-label="zoom out">−</button>
+    </div>
+  </div>
+  <div class="viewer-controls">
+    <button class="view-btn" data-view="front" data-ar="أمامي" data-en="Front">أمامي</button>
+    <button class="view-btn" data-view="back" data-ar="خلفي" data-en="Back">خلفي</button>
+    <button class="view-btn" data-view="left" data-ar="جانب أيسر" data-en="Left">جانب أيسر</button>
+    <button class="view-btn" data-view="right" data-ar="جانب أيمن" data-en="Right">جانب أيمن</button>
+    <button class="view-btn" data-view="top" data-ar="من الأعلى" data-en="Top">من الأعلى</button>
+    <button class="view-btn" data-view="iso" data-ar="منظر عام" data-en="Isometric">منظر عام</button>
+    <button class="view-btn" id="auto-rotate-btn" data-ar="تدوير تلقائي: تشغيل" data-en="Auto-rotate: On">تدوير تلقائي: تشغيل</button>
+  </div>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<section id="gallery">
+  <div class="section-head" data-reveal>
+    <span class="eyebrow" data-ar="أرشيف بصري" data-en="VISUAL ARCHIVE">أرشيف بصري</span>
+    <h2 data-ar="المعرض" data-en="Gallery">المعرض</h2>
+    <div class="divider"></div>
+    <p data-ar="ضع صورك الحقيقية للقلعة داخل مجلد assets/images باسم gallery-01.jpg حتى gallery-08.jpg لتظهر تلقائيًا هنا؛ وإلا تُعرض بلاطات حجرية توليدية بديلة." data-en="Drop your real citadel photos into assets/images as gallery-01.jpg through gallery-08.jpg to have them appear here automatically; otherwise generated stone tiles are shown instead.">ضع صورك الحقيقية للقلعة داخل مجلد assets/images باسم gallery-01.jpg حتى gallery-08.jpg لتظهر تلقائيًا هنا؛ وإلا تُعرض بلاطات حجرية توليدية بديلة.</p>
+  </div>
+  <div class="masonry" id="masonry"></div>
+</section>
+
+<div id="lightbox">
+  <button class="close" id="lightbox-close">×</button>
+  <div class="frame">
+    <div class="swatch"><div class="fill" id="lightbox-fill"></div></div>
+    <div class="cap2" id="lightbox-cap"></div>
+  </div>
+</div>
+
+<!-- ================= STATS ================= -->
+<section id="stats">
+  <div class="stat-grid">
+    <div class="stat"><b data-count="850000">0</b><span data-ar="زائر سنويًا" data-en="Visitors / year">زائر سنويًا</span></div>
+    <div class="stat"><b data-count="4000">0</b><span data-ar="عام من التاريخ" data-en="Years of history">عام من التاريخ</span></div>
+    <div class="stat"><b data-count="160">0</b><span data-ar="ألف م² مساحة" data-en="Thousand m² area">ألف م² مساحة</span></div>
+    <div class="stat"><b data-count="50">0</b><span data-ar="مترًا ارتفاع التلّة" data-en="Meters, mound height">مترًا ارتفاع التلّة</span></div>
+    <div class="stat"><b data-count="7">0</b><span data-ar="أبراج رئيسية" data-en="Main towers">أبراج رئيسية</span></div>
+  </div>
+</section>
+
+<!-- ================= LOCATION ================= -->
+<section id="location">
+  <div class="loc-wrap">
+    <div data-reveal>
+      <span class="eyebrow" data-ar="كيف تصل" data-en="HOW TO ARRIVE">كيف تصل</span>
+      <h2 data-ar="الموقع الجغرافي" data-en="Location">الموقع الجغرافي</h2>
+      <div class="divider"></div>
+      <div class="map-card"><div class="map-pin"></div></div>
+      <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Citadel+of+Aleppo" target="_blank" rel="noopener">
+        <span data-ar="فتح الموقع في خرائط جوجل" data-en="Open location in Google Maps">فتح الموقع في خرائط جوجل</span> ↗
+      </a>
+    </div>
+    <ul class="loc-list" data-reveal>
+      <li><b data-ar="العنوان" data-en="ADDRESS">العنوان</b><span data-ar="وسط مدينة حلب القديمة، سورية" data-en="Old City of Aleppo, Syria">وسط مدينة حلب القديمة، سورية</span></li>
+      <li><b data-ar="ساعات الزيارة" data-en="VISITING HOURS">ساعات الزيارة</b><span data-ar="يوميًا من ٩ صباحًا حتى ٦ مساءً، عدا الثلاثاء" data-en="Daily 9 AM – 6 PM, closed Tuesdays">يوميًا من ٩ صباحًا حتى ٦ مساءً، عدا الثلاثاء</span></li>
+      <li><b data-ar="الوصول" data-en="ACCESS">الوصول</b><span data-ar="يُنصح بالوصول سيرًا عبر أسواق المدينة القديمة المحيطة" data-en="Best reached on foot through the surrounding old-city souks">يُنصح بالوصول سيرًا عبر أسواق المدينة القديمة المحيطة</span></li>
+      <li><b data-ar="ملاحظة" data-en="NOTE">ملاحظة</b><span data-ar="يُرجى مراجعة الجهات الرسمية للتأكد من أوضاع الزيارة الحالية" data-en="Please check official sources for current visiting conditions">يُرجى مراجعة الجهات الرسمية للتأكد من أوضاع الزيارة الحالية</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="section-head" data-reveal>
+    <span class="eyebrow" data-ar="راسلنا" data-en="GET IN TOUCH">راسلنا</span>
+    <h2 data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</h2>
+    <div class="divider"></div>
+  </div>
+  <form id="contact-form" novalidate>
+    <div class="field">
+      <input type="text" id="f-name" placeholder=" " required>
+      <label for="f-name" data-ar="الاسم الكامل" data-en="Full name">الاسم الكامل</label>
+      <div class="msg" id="err-name"></div>
+    </div>
+    <div class="field">
+      <input type="email" id="f-email" placeholder=" " required>
+      <label for="f-email" data-ar="البريد الإلكتروني" data-en="Email address">البريد الإلكتروني</label>
+      <div class="msg" id="err-email"></div>
+    </div>
+    <div class="field">
+      <textarea id="f-msg" placeholder=" " required></textarea>
+      <label for="f-msg" data-ar="رسالتك" data-en="Your message">رسالتك</label>
+      <div class="msg" id="err-msg"></div>
+    </div>
+    <button type="submit" class="submit-btn" data-ar="إرسال الرسالة" data-en="Send message">إرسال الرسالة</button>
+    <div id="form-status"></div>
+  </form>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="logo" style="margin-bottom:16px;"><span class="glyph"></span><span data-ar="قلعة حلب" data-en="Citadel of Aleppo">قلعة حلب</span></div>
+      <p style="color:var(--parchment-dim); font-weight:300; max-width:320px; line-height:1.9; font-size:.9rem;" data-ar="حصنٌ يشهد على أربعة آلاف عام من تاريخ حلب، ومَعلمٌ مسجّل ضمن التراث العالمي لليونسكو." data-en="A fortress bearing witness to four thousand years of Aleppo's history, a UNESCO World Heritage landmark.">حصنٌ يشهد على أربعة آلاف عام من تاريخ حلب، ومَعلمٌ مسجّل ضمن التراث العالمي لليونسكو.</p>
+      <div class="social-row">
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="Facebook">FB</a>
+        <a href="#" aria-label="YouTube">YT</a>
+      </div>
+    </div>
+    <div>
+      <h4 data-ar="روابط سريعة" data-en="Quick Links">روابط سريعة</h4>
+      <ul>
+        <li><a href="#history" data-ar="تاريخ القلعة" data-en="History">تاريخ القلعة</a></li>
+        <li><a href="#tour" data-ar="الجولة ثلاثية الأبعاد" data-en="3D Tour">الجولة ثلاثية الأبعاد</a></li>
+        <li><a href="#model360" data-ar="نموذج ٣٦٠°" data-en="360° Model">نموذج ٣٦٠°</a></li>
+        <li><a href="#gallery" data-ar="المعرض" data-en="Gallery">المعرض</a></li>
+        <li><a href="#location" data-ar="الموقع" data-en="Location">الموقع</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 data-ar="الزيارة" data-en="Visiting">الزيارة</h4>
+      <ul>
+        <li><a href="#stats" data-ar="أرقام وحقائق" data-en="Facts & figures">أرقام وحقائق</a></li>
+        <li><a href="#contact" data-ar="تواصل معنا" data-en="Contact">تواصل معنا</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span style="display:flex; align-items:center; gap:10px;">
+      <svg width="22" height="15" viewBox="0 0 90 60" aria-hidden="true" style="flex-shrink:0;">
+        <rect x="0" y="0" width="90" height="20" fill="#1E7A3D"/>
+        <rect x="0" y="20" width="90" height="20" fill="#FFFFFF"/>
+        <rect x="0" y="40" width="90" height="20" fill="#000000"/>
+        <g fill="#CE1126">
+          <polygon points="0,-4.2 0.97,-1.34 4.0,-1.30 1.57,0.51 2.47,3.40 0,1.65 -2.47,3.40 -1.57,0.51 -4.0,-1.30 -0.97,-1.34" transform="translate(28.5,30) scale(1.25)"/>
+          <polygon points="0,-4.2 0.97,-1.34 4.0,-1.30 1.57,0.51 2.47,3.40 0,1.65 -2.47,3.40 -1.57,0.51 -4.0,-1.30 -0.97,-1.34" transform="translate(45,30) scale(1.25)"/>
+          <polygon points="0,-4.2 0.97,-1.34 4.0,-1.30 1.57,0.51 2.47,3.40 0,1.65 -2.47,3.40 -1.57,0.51 -4.0,-1.30 -0.97,-1.34" transform="translate(61.5,30) scale(1.25)"/>
+        </g>
+      </svg>
+      <span data-ar="© ٢٠٢٦ قلعة حلب. جميع الحقوق محفوظة." data-en="© 2026 Citadel of Aleppo. All rights reserved.">© ٢٠٢٦ قلعة حلب. جميع الحقوق محفوظة.</span>
+    </span>
+    <a href="#home" id="to-top">↑</a>
+  </div>
+</footer>
+
+<script>
+/* ============ i18n ============ */
+const langToggle = document.getElementById('lang-toggle');
+let currentLang = 'ar';
+function applyLang(lang){
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.body.classList.toggle('en', lang === 'en');
+  document.querySelectorAll('[data-ar]').forEach(el=>{
+    const val = el.getAttribute(lang === 'ar' ? 'data-ar' : 'data-en');
+    if(val !== null){
+      if(val.includes('<em>')) el.innerHTML = val; else el.textContent = val;
+    }
+  });
+  langToggle.textContent = lang === 'ar' ? 'EN' : 'AR';
+}
+langToggle.addEventListener('click', ()=> applyLang(currentLang === 'ar' ? 'en' : 'ar'));
+
+/* ============ nav scroll + mobile ============ */
+const header = document.getElementById('site-header');
+window.addEventListener('scroll', ()=> header.classList.toggle('scrolled', window.scrollY > 40));
+const navToggle = document.getElementById('nav-toggle');
+const navMenu = document.getElementById('nav-menu');
+navToggle.addEventListener('click', ()=> navMenu.classList.toggle('open'));
+document.querySelectorAll('#nav-menu a').forEach(a=> a.addEventListener('click', ()=> navMenu.classList.remove('open')));
+
+/* ============ custom cursor ============ */
+const cursor = document.getElementById('cursor');
+const cdot = document.getElementById('cursor-dot');
+window.addEventListener('mousemove', e=>{
+  cdot.style.left = e.clientX+'px'; cdot.style.top = e.clientY+'px';
+  cursor.animate({left:e.clientX+'px', top:e.clientY+'px'},{duration:400, fill:'forwards'});
+});
+document.querySelectorAll('a,button,.tour-hotspot,.g-tile,li.tour-info').forEach(el=>{
+  el.addEventListener('mouseenter', ()=> cursor.style.transform='translate(-50%,-50%) scale(1.8)');
+  el.addEventListener('mouseleave', ()=> cursor.style.transform='translate(-50%,-50%) scale(1)');
+});
+
+/* ============ ascent tracker + scroll reveal ============ */
+const ascentFill = document.getElementById('ascent-fill');
+const ascentDot = document.getElementById('ascent-dot');
+function updateAscent(){
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const p = Math.min(1, Math.max(0, window.scrollY / h));
+  const y = p * 400;
+  ascentFill.setAttribute('d', `M17 0 L17 ${y}`);
+  ascentDot.setAttribute('cy', y);
+}
+window.addEventListener('scroll', updateAscent);
+updateAscent();
+
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('in'); });
+},{threshold:.15});
+document.querySelectorAll('[data-reveal]').forEach(el=> revealObserver.observe(el));
+
+/* ============ animated stat counters ============ */
+const statObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      const el = en.target;
+      const target = +el.dataset.count;
+      let cur = 0;
+      const step = Math.max(1, Math.ceil(target/90));
+      const tick = ()=>{
+        cur = Math.min(target, cur+step);
+        el.textContent = cur.toLocaleString(currentLang==='ar' ? 'ar-EG' : 'en-US');
+        if(cur < target) requestAnimationFrame(tick);
+      };
+      tick();
+      statObserver.unobserve(el);
+    }
+  });
+},{threshold:.4});
+document.querySelectorAll('[data-count]').forEach(el=> statObserver.observe(el));
+
+/* ============ masonry gallery (real photos when available, generated stone tiles as fallback) ============ */
+const galleryData = [
+  {photo:'assets/images/gallery-01.jpg', ratio:120, hue:[36,28], cap_ar:'جسر المدخل الحجري', cap_en:'The stone entrance bridge'},
+  {photo:'assets/images/gallery-02.jpg', ratio:70, hue:[30,20], cap_ar:'أحد الأبراج الدفاعية', cap_en:'One of the defensive towers'},
+  {photo:'assets/images/gallery-03.jpg', ratio:95, hue:[40,26], cap_ar:'نقش حجري أثري', cap_en:'A carved historical inscription'},
+  {photo:'assets/images/gallery-04.jpg', ratio:60, hue:[24,16], cap_ar:'ممر البوابة المتعرّج', cap_en:'The zigzagging gate passage'},
+  {photo:'assets/images/gallery-05.jpg', ratio:110, hue:[38,30], cap_ar:'الجامع الكبير للقلعة', cap_en:"The citadel's great mosque"},
+  {photo:'assets/images/gallery-06.jpg', ratio:80, hue:[32,22], cap_ar:'أسوار القلعة عند الغروب', cap_en:'The ramparts at dusk'},
+  {photo:'assets/images/gallery-07.jpg', ratio:100, hue:[42,32], cap_ar:'قاعة العرش الأيوبية', cap_en:'The Ayyubid throne hall'},
+  {photo:'assets/images/gallery-08.jpg', ratio:65, hue:[28,18], cap_ar:'درج صاعد داخل الحصن', cap_en:'A stairway ascending within the keep'},
+];
+const masonry = document.getElementById('masonry');
+galleryData.forEach((g,i)=>{
+  const tile = document.createElement('div'); tile.className='g-tile';
+  const fillStyle = `background:
+        linear-gradient(155deg, hsl(${g.hue[0]} 42% 34%), hsl(${g.hue[1]} 38% 16%)),
+        repeating-linear-gradient(115deg, rgba(0,0,0,.08) 0 3px, transparent 3px 7px);
+        background-blend-mode:overlay;`;
+  tile.innerHTML = `
+    <div class="swatch" style="--ar:${g.ratio}%;">
+      <div class="fill" style="${fillStyle}"></div>
+      <img src="${g.photo}" alt="" loading="lazy"
+           style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .4s;"
+           onload="this.style.opacity=1;"
+           onerror="this.style.display='none';">
+    </div>
+    <div class="cap" data-ar="${g.cap_ar}" data-en="${g.cap_en}">${currentLang==='ar'?g.cap_ar:g.cap_en}</div>`;
+  tile.addEventListener('click', ()=>{
+    const img = tile.querySelector('img');
+    const lbFill = document.getElementById('lightbox-fill');
+    if(img && img.style.display !== 'none' && img.complete && img.naturalWidth){
+      lbFill.style.cssText = '';
+      lbFill.innerHTML = `<img src="${g.photo}" alt="" style="width:100%;height:100%;object-fit:cover;">`;
+    } else {
+      lbFill.innerHTML = '';
+      lbFill.style.cssText = fillStyle;
+    }
+    document.getElementById('lightbox-cap').textContent = currentLang==='ar' ? g.cap_ar : g.cap_en;
+    document.getElementById('lightbox').classList.add('open');
+  });
+  masonry.appendChild(tile);
+});
+document.getElementById('lightbox-close').addEventListener('click', ()=> document.getElementById('lightbox').classList.remove('open'));
+document.getElementById('lightbox').addEventListener('click', (e)=>{ if(e.target.id==='lightbox') e.target.classList.remove('open'); });
+
+/* ============ contact form validation ============ */
+const form = document.getElementById('contact-form');
+form.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  let valid = true;
+  const name = document.getElementById('f-name');
+  const email = document.getElementById('f-email');
+  const msg = document.getElementById('f-msg');
+  const errName = document.getElementById('err-name');
+  const errEmail = document.getElementById('err-email');
+  const errMsg = document.getElementById('err-msg');
+  errName.textContent = errEmail.textContent = errMsg.textContent = '';
+
+  if(name.value.trim().length < 2){
+    errName.textContent = currentLang==='ar' ? 'الرجاء إدخال اسم صحيح' : 'Please enter a valid name';
+    valid = false;
+  }
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRe.test(email.value.trim())){
+    errEmail.textContent = currentLang==='ar' ? 'الرجاء إدخال بريد إلكتروني صحيح' : 'Please enter a valid email';
+    valid = false;
+  }
+  if(msg.value.trim().length < 8){
+    errMsg.textContent = currentLang==='ar' ? 'الرسالة قصيرة جدًا' : 'Message is too short';
+    valid = false;
+  }
+  const status = document.getElementById('form-status');
+  if(valid){
+    status.textContent = currentLang==='ar' ? '✓ تم إرسال رسالتك بنجاح، سنعود إليك قريبًا.' : '✓ Your message has been sent. We will get back to you soon.';
+    status.className = 'ok';
+    form.reset();
+  } else {
+    status.className = ''; status.textContent='';
+  }
+});
+
+/* ================================================================
+   Shared helper: procedural masonry texture (canvas-generated)
+   Gives the stone materials real block/mortar detail + bump so the
+   3D renders read as photoreal weathered limestone rather than flat color.
+   ================================================================ */
+function makeMasonryTexture(baseHex, mortarHex, opts){
+  opts = opts || {};
+  const size = 512;
+  const cvs = document.createElement('canvas'); cvs.width = size; cvs.height = size;
+  const ctx = cvs.getContext('2d');
+  ctx.fillStyle = mortarHex; ctx.fillRect(0,0,size,size);
+  const rows = opts.rows || 8, cols = opts.cols || 6;
+  const bh = size/rows, bw = size/cols;
+  for(let r=0;r<rows;r++){
+    const offset = (r%2)*(bw/2);
+    for(let c=-1;c<=cols;c++){
+      const x = c*bw + offset, y = r*bh;
+      const shade = 0.85 + Math.random()*0.3;
+      ctx.fillStyle = shadeHex(baseHex, shade);
+      ctx.fillRect(x+2, y+2, bw-4, bh-4);
+      // subtle grain
+      for(let g=0; g<10; g++){
+        ctx.fillStyle = `rgba(0,0,0,${Math.random()*0.05})`;
+        ctx.fillRect(x+Math.random()*bw, y+Math.random()*bh, 2, 2);
+      }
+    }
+  }
+  const tex = new THREE.CanvasTexture(cvs);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(opts.repeatX || 2, opts.repeatY || 2);
+  return tex;
+}
+function shadeHex(hex, factor){
+  const c = new THREE.Color(hex);
+  c.r = Math.min(1, c.r*factor); c.g = Math.min(1, c.g*factor); c.b = Math.min(1, c.b*factor);
+  return '#' + c.getHexString();
+}
+const stoneTexLight = makeMasonryTexture('#c9a876', '#5f4c34');
+const stoneTexDark  = makeMasonryTexture('#8b6f47', '#3a2c1e');
+
+/* ================================================================
+   THREE.JS — HERO: procedural stylized citadel on its mound
+   ================================================================ */
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(42, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.set(0, 3.4, 10);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+
+  const stoneMat = new THREE.MeshStandardMaterial({map:stoneTexLight, color:0xc9a876, roughness:.92, metalness:.05});
+  const stoneDarkMat = new THREE.MeshStandardMaterial({map:stoneTexDark, color:0x8b6f47, roughness:.95, metalness:.05});
+  const glowMat = new THREE.MeshBasicMaterial({color:0xe0a94f});
+
+  const rig = new THREE.Group();
+  scene.add(rig);
+
+  // conical mound (the artificial hill)
+  const mound = new THREE.Mesh(new THREE.ConeGeometry(4.6, 2.4, 24, 1, true), stoneDarkMat);
+  mound.position.y = -1.6;
+  rig.add(mound);
+  const moundCap = new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.4,.3,24), stoneDarkMat);
+  moundCap.position.y = -.45;
+  rig.add(moundCap);
+
+  // outer curtain wall ring made of block segments
+  const wallRadius = 2.35;
+  const blocks = 22;
+  for(let i=0;i<blocks;i++){
+    const ang = (i/blocks)*Math.PI*2;
+    const h = 0.9 + Math.random()*0.25;
+    const block = new THREE.Mesh(new THREE.BoxGeometry(0.62,h,0.5), i%5===0?stoneDarkMat:stoneMat);
+    block.position.set(Math.cos(ang)*wallRadius, -0.15+h/2, Math.sin(ang)*wallRadius);
+    block.rotation.y = -ang;
+    rig.add(block);
+  }
+  // towers at cardinal-ish points
+  const towerAngles = [0, Math.PI/2, Math.PI, Math.PI*1.5, Math.PI*0.25, Math.PI*1.25];
+  towerAngles.forEach((ang,i)=>{
+    const tw = new THREE.Mesh(new THREE.CylinderGeometry(0.34,0.4,1.9,12), stoneMat);
+    tw.position.set(Math.cos(ang)*wallRadius, 0.55, Math.sin(ang)*wallRadius);
+    rig.add(tw);
+    const roof = new THREE.Mesh(new THREE.ConeGeometry(0.46,0.5,12), stoneDarkMat);
+    roof.position.set(tw.position.x, 1.75, tw.position.z);
+    rig.add(roof);
+    if(i%2===0){
+      const lantern = new THREE.Mesh(new THREE.SphereGeometry(0.045,8,8), glowMat);
+      lantern.position.set(tw.position.x, 1.15, tw.position.z);
+      rig.add(lantern);
+      const pl = new THREE.PointLight(0xe0a94f, 1.1, 3);
+      pl.position.copy(lantern.position);
+      rig.add(pl);
+    }
+  });
+
+  // central keep
+  const keep = new THREE.Mesh(new THREE.BoxGeometry(1.5,2.1,1.5), stoneMat);
+  keep.position.y = 0.6;
+  rig.add(keep);
+  const keepRoof = new THREE.Mesh(new THREE.ConeGeometry(1.15,0.9,4), stoneDarkMat);
+  keepRoof.position.y = 2.05; keepRoof.rotation.y = Math.PI/4;
+  rig.add(keepRoof);
+
+  // entrance bridge silhouette
+  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.18, 2.6), stoneDarkMat);
+  bridge.position.set(0, -0.55, wallRadius+1.3);
+  rig.add(bridge);
+
+  // enable realistic shadowing across the whole rig
+  rig.traverse(obj=>{ if(obj.isMesh){ obj.castShadow = true; obj.receiveShadow = true; } });
+  mound.receiveShadow = true; moundCap.receiveShadow = true;
+
+  // lighting: dusk key light + ambient fill
+  const key = new THREE.DirectionalLight(0xffb066, 1.4);
+  key.position.set(-6, 4, 4);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024,1024);
+  key.shadow.camera.left = -6; key.shadow.camera.right = 6;
+  key.shadow.camera.top = 6; key.shadow.camera.bottom = -6;
+  scene.add(key);
+  const fill = new THREE.AmbientLight(0x3a2a20, 0.9);
+  scene.add(fill);
+  const rim = new THREE.DirectionalLight(0x445577, 0.5);
+  rim.position.set(4,2,-6);
+  scene.add(rim);
+
+  // simple particle dust / fog motes
+  const pGeo = new THREE.BufferGeometry();
+  const pCount = 220;
+  const positions = new Float32Array(pCount*3);
+  for(let i=0;i<pCount;i++){
+    positions[i*3] = (Math.random()-0.5)*14;
+    positions[i*3+1] = Math.random()*5 - 1;
+    positions[i*3+2] = (Math.random()-0.5)*14;
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+  const pMat = new THREE.PointsMaterial({color:0xd9b98a, size:0.02, transparent:true, opacity:.5});
+  const particles = new THREE.Points(pGeo, pMat);
+  scene.add(particles);
+
+  let mouseX=0, mouseY=0;
+  window.addEventListener('mousemove', e=>{
+    mouseX = (e.clientX/window.innerWidth - .5);
+    mouseY = (e.clientY/window.innerHeight - .5);
+  });
+
+  function animate(){
+    requestAnimationFrame(animate);
+    rig.rotation.y += 0.0018;
+    camera.position.x += (mouseX*2 - camera.position.x)*0.02;
+    camera.position.y += (3.2 - mouseY*1.2 - camera.position.y)*0.02;
+    camera.lookAt(0,0.3,0);
+    particles.rotation.y += 0.0004;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // GSAP scroll-driven camera "ascent" through hero
+  if(window.gsap && window.ScrollTrigger){
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.to(camera.position, {
+      z: 6, y: 1.6,
+      scrollTrigger:{ trigger:'#home', start:'top top', end:'bottom top', scrub:1 }
+    });
+  }
+})();
+
+/* ================================================================
+   THREE.JS — TOUR STAGE: orbitable model + camera stations
+   ================================================================ */
+(function(){
+  const canvas = document.getElementById('tour-canvas');
+  const stage = canvas.parentElement;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, stage.clientWidth/stage.clientHeight, 0.1, 100);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
+  renderer.setSize(stage.clientWidth, stage.clientHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+  const stoneMat = new THREE.MeshStandardMaterial({map:stoneTexLight, color:0xc9a876, roughness:.9});
+  const stoneDarkMat = new THREE.MeshStandardMaterial({map:stoneTexDark, color:0x8b6f47, roughness:.9});
+  const model = new THREE.Group();
+  scene.add(model);
+
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(2.6,2.6,0.4,20), stoneDarkMat);
+  base.position.y=-1.2; model.add(base);
+  for(let i=0;i<18;i++){
+    const ang=(i/18)*Math.PI*2;
+    const h=0.8+Math.random()*.3;
+    const b=new THREE.Mesh(new THREE.BoxGeometry(0.6,h,0.45), stoneMat);
+    b.position.set(Math.cos(ang)*2.3,-0.6+h/2,Math.sin(ang)*2.3);
+    b.rotation.y=-ang;
+    model.add(b);
+  }
+  const keep = new THREE.Mesh(new THREE.BoxGeometry(1.3,1.8,1.3), stoneMat);
+  keep.position.y=0.4; model.add(keep);
+  const keepRoof = new THREE.Mesh(new THREE.ConeGeometry(1,0.8,4), stoneDarkMat);
+  keepRoof.position.y=1.7; keepRoof.rotation.y=Math.PI/4; model.add(keepRoof);
+  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.45,0.15,2.2), stoneDarkMat);
+  bridge.position.set(0,-0.85,3.2); model.add(bridge);
+
+  scene.add(new THREE.AmbientLight(0x3a2a20,1));
+  const key=new THREE.DirectionalLight(0xffb066,1.3); key.position.set(-4,4,4); key.castShadow = true; scene.add(key);
+  model.traverse(obj=>{ if(obj.isMesh){ obj.castShadow = true; obj.receiveShadow = true; } });
+
+  const stations = [
+    {name:0, pos:new THREE.Vector3(0,0.4,4.4)},
+    {name:1, pos:new THREE.Vector3(2.2,0.4,2.2)},
+    {name:2, pos:new THREE.Vector3(3.4,0.6,0)},
+    {name:3, pos:new THREE.Vector3(0,1.6,2.6)},
+  ];
+  camera.position.copy(stations[0].pos);
+  camera.lookAt(0,0.2,0);
+
+  let dragging=false, prevX=0, prevY=0, targetRotY=0.6, targetRotX=0;
+  model.rotation.y = targetRotY;
+  let autoRotate = true;
+  stage.addEventListener('pointerdown', e=>{ dragging=true; prevX=e.clientX; prevY=e.clientY; autoRotate=false; });
+  window.addEventListener('pointerup', ()=> dragging=false);
+  window.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    targetRotY += (e.clientX-prevX)*0.006;
+    targetRotX = Math.max(-0.3, Math.min(0.3, targetRotX + (e.clientY-prevY)*0.004));
+    prevX=e.clientX; prevY=e.clientY;
+  });
+  stage.addEventListener('wheel', e=>{
+    e.preventDefault();
+    camera.position.z += e.deltaY*0.003;
+    camera.position.z = Math.max(3.5, Math.min(7, camera.position.z));
+  }, {passive:false});
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if(autoRotate) targetRotY += 0.0025;
+    model.rotation.y += (targetRotY - model.rotation.y)*0.08;
+    model.rotation.x += (targetRotX - model.rotation.x)*0.08;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = stage.clientWidth/stage.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(stage.clientWidth, stage.clientHeight);
+  });
+
+  document.querySelectorAll('#tour-list li').forEach(li=>{
+    li.addEventListener('click', ()=>{
+      document.querySelectorAll('#tour-list li').forEach(x=>x.classList.remove('active'));
+      li.classList.add('active');
+      autoRotate = false;
+      const st = stations[+li.dataset.station];
+      if(window.gsap){
+        gsap.to(camera.position, {x:st.pos.x, y:st.pos.y, z:st.pos.z, duration:1.1, ease:'power3.inOut',
+          onUpdate:()=>camera.lookAt(0,0.2,0)});
+      } else {
+        camera.position.copy(st.pos); camera.lookAt(0,0.2,0);
+      }
+    });
+  });
+})();
+
+/* ================================================================
+   THREE.JS — 360° VIEWER: detailed model, unrestricted free orbit
+   ================================================================ */
+(function(){
+  const canvas = document.getElementById('model360-canvas');
+  const stage = document.getElementById('viewer-stage');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, stage.clientWidth/stage.clientHeight, 0.1, 100);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
+  renderer.setSize(stage.clientWidth, stage.clientHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+
+  const stoneMat = new THREE.MeshStandardMaterial({map:stoneTexLight, color:0xc9a876, roughness:.92, metalness:.04});
+  const stoneDarkMat = new THREE.MeshStandardMaterial({map:stoneTexDark, color:0x8b6f47, roughness:.92, metalness:.04});
+  const merlonMat = new THREE.MeshStandardMaterial({color:0xd8b98a, roughness:.9});
+  const glowMat = new THREE.MeshBasicMaterial({color:0xe0a94f});
+
+  const model = new THREE.Group();
+  scene.add(model);
+
+  // --- elliptical glacis mound (the sloped artificial hill the citadel sits on) ---
+  const glacis = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 3.3, 2.2, 28, 1, true), stoneDarkMat);
+  glacis.scale.set(1.25, 1, 1);
+  glacis.position.y = -1.9;
+  model.add(glacis);
+  const glacisTop = new THREE.Mesh(new THREE.CylinderGeometry(2.0,2.0,.25,28), stoneDarkMat);
+  glacisTop.scale.set(1.25,1,1); glacisTop.position.y = -0.8;
+  model.add(glacisTop);
+
+  // --- curtain wall with crenellations (merlons) ---
+  const wallR = 1.85;
+  const segs = 26;
+  for(let i=0;i<segs;i++){
+    const ang = (i/segs)*Math.PI*2;
+    const x = Math.cos(ang)*wallR*1.25, z = Math.sin(ang)*wallR;
+    const h = 0.85;
+    const block = new THREE.Mesh(new THREE.BoxGeometry(0.5,h,0.42), i%6===0?stoneDarkMat:stoneMat);
+    block.position.set(x, -0.35+h/2, z);
+    block.rotation.y = -ang;
+    model.add(block);
+    if(i%2===0){
+      const merlon = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.22,0.42), merlonMat);
+      merlon.position.set(x, -0.35+h+0.11, z);
+      merlon.rotation.y = -ang;
+      model.add(merlon);
+    }
+  }
+
+  // --- corner & mid towers ---
+  const towerAngles = [0, 0.7, 1.4, Math.PI, Math.PI+0.7, Math.PI+1.4, Math.PI*0.5, Math.PI*1.5];
+  towerAngles.forEach((ang,i)=>{
+    const x = Math.cos(ang)*wallR*1.25, z = Math.sin(ang)*wallR;
+    const tall = i===0; // taller gate tower at front
+    const th = tall ? 2.1 : 1.55;
+    const tw = new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.36,th,12), stoneMat);
+    tw.position.set(x, -0.35+th/2, z);
+    model.add(tw);
+    const roof = new THREE.Mesh(new THREE.ConeGeometry(0.42,0.42,12), stoneDarkMat);
+    roof.position.set(x, -0.35+th+0.2, z);
+    model.add(roof);
+    if(i%2===0){
+      const lantern = new THREE.Mesh(new THREE.SphereGeometry(0.04,8,8), glowMat);
+      lantern.position.set(x, -0.35+th-0.15, z);
+      model.add(lantern);
+    }
+  });
+
+  // --- central keep ---
+  const keep = new THREE.Mesh(new THREE.BoxGeometry(1.35,1.9,1.35), stoneMat);
+  keep.position.y = 0.35;
+  model.add(keep);
+  const keepRoof = new THREE.Mesh(new THREE.ConeGeometry(1.05,0.85,4), stoneDarkMat);
+  keepRoof.position.y = 1.72; keepRoof.rotation.y = Math.PI/4;
+  model.add(keepRoof);
+  // small flanking hall
+  const hall = new THREE.Mesh(new THREE.BoxGeometry(0.9,1.0,0.7), stoneMat);
+  hall.position.set(0.9,-0.1,0.6);
+  model.add(hall);
+
+  // --- entrance bridge + gate tower (extends toward viewer) ---
+  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.55,0.16,2.3), stoneDarkMat);
+  bridge.position.set(0, -0.95, wallR*1.25+1.5);
+  model.add(bridge);
+  for(let i=0;i<4;i++){
+    const arch = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.4,0.1), stoneDarkMat);
+    arch.position.set(0, -1.5, wallR*1.25+0.6+i*0.6);
+    model.add(arch);
+  }
+  const gateTower = new THREE.Mesh(new THREE.BoxGeometry(0.7,1.6,0.7), stoneMat);
+  gateTower.position.set(0, -0.15, wallR*1.25+0.2);
+  model.add(gateTower);
+
+  scene.add(new THREE.AmbientLight(0x3a2a20, 1));
+  const key = new THREE.DirectionalLight(0xffb066, 1.35); key.position.set(-4,5,4); key.castShadow = true;
+  key.shadow.mapSize.set(1024,1024); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x445577, 0.5); rim.position.set(4,2,-5); scene.add(rim);
+  model.traverse(obj=>{ if(obj.isMesh){ obj.castShadow = true; obj.receiveShadow = true; } });
+
+  // --- spherical free-orbit camera rig ---
+  let radius = 6.2, azimuth = 0.7, polar = 1.15; // polar: 0 = straight down, PI = straight up
+  const target = new THREE.Vector3(0, -0.1, 0);
+  function updateCamera(){
+    camera.position.x = target.x + radius * Math.sin(polar) * Math.cos(azimuth);
+    camera.position.y = target.y + radius * Math.cos(polar);
+    camera.position.z = target.z + radius * Math.sin(polar) * Math.sin(azimuth);
+    camera.lookAt(target);
+  }
+  updateCamera();
+
+  let dragging = false, prevX = 0, prevY = 0, autoRotate = true;
+  stage.addEventListener('pointerdown', e=>{ dragging = true; prevX = e.clientX; prevY = e.clientY; stage.classList.add('grabbing'); });
+  window.addEventListener('pointerup', ()=>{ dragging = false; stage.classList.remove('grabbing'); });
+  window.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    azimuth -= (e.clientX - prevX) * 0.006;
+    polar -= (e.clientY - prevY) * 0.006;
+    polar = Math.max(0.15, Math.min(Math.PI - 0.1, polar)); // allow near-top and near-bottom, all sides
+    prevX = e.clientX; prevY = e.clientY;
+    autoRotate = false;
+  });
+  stage.addEventListener('wheel', e=>{
+    e.preventDefault();
+    radius = Math.max(3.5, Math.min(11, radius + e.deltaY * 0.004));
+  }, {passive:false});
+  document.getElementById('zoom-in').addEventListener('click', ()=> radius = Math.max(3.5, radius - 0.8));
+  document.getElementById('zoom-out').addEventListener('click', ()=> radius = Math.min(11, radius + 0.8));
+
+  // preset views
+  const presets = {
+    front: {azimuth: Math.PI/2, polar: 1.15},
+    back:  {azimuth: -Math.PI/2, polar: 1.15},
+    left:  {azimuth: Math.PI, polar: 1.15},
+    right: {azimuth: 0, polar: 1.15},
+    top:   {azimuth: 0.7, polar: 0.2},
+    iso:   {azimuth: 0.7, polar: 1.0},
+  };
+  let targetAzimuth = azimuth, targetPolar = polar, animatingPreset = false;
+  document.querySelectorAll('.view-btn[data-view]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.view-btn[data-view]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      autoRotate = false;
+      const p = presets[btn.dataset.view];
+      // choose shortest path for azimuth
+      let diff = p.azimuth - azimuth;
+      diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+      targetAzimuth = azimuth + diff;
+      targetPolar = p.polar;
+      animatingPreset = true;
+    });
+  });
+  const autoBtn = document.getElementById('auto-rotate-btn');
+  autoBtn.addEventListener('click', ()=>{
+    autoRotate = !autoRotate;
+    autoBtn.textContent = currentLang === 'ar'
+      ? (autoRotate ? 'تدوير تلقائي: تشغيل' : 'تدوير تلقائي: إيقاف')
+      : (autoRotate ? 'Auto-rotate: On' : 'Auto-rotate: Off');
+  });
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if(autoRotate) azimuth += 0.0032;
+    if(animatingPreset){
+      azimuth += (targetAzimuth - azimuth) * 0.08;
+      polar += (targetPolar - polar) * 0.08;
+      if(Math.abs(targetAzimuth-azimuth) < 0.001 && Math.abs(targetPolar-polar) < 0.001) animatingPreset = false;
+    }
+    updateCamera();
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = stage.clientWidth/stage.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(stage.clientWidth, stage.clientHeight);
+  });
+})();
+
+/* ============ loader ============ */
+window.addEventListener('load', ()=>{
+  gsap.to('#loader-bar', {width:'100%', duration:1.1, ease:'power2.out'});
+  gsap.to('#loader', {opacity:0, duration:.7, delay:1.0, onComplete:()=>{
+    document.getElementById('loader').classList.add('hidden');
+  }});
+});
+setTimeout(()=>{ // fallback in case load event is delayed
+  const l = document.getElementById('loader');
+  if(l && !l.classList.contains('hidden')){ l.classList.add('hidden'); }
+}, 4000);
+</script>
+</body>
+</html>

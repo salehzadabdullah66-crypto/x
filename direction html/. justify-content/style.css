@@ -1,0 +1,50 @@
+body{
+    font-family: Arial, sans-serif;
+}
+
+.container{
+    display: flex;
+    width: 600px;
+    height: 100px;
+    border: 3px solid black;
+    margin-bottom: 30px;
+    align-items: center;
+    background-color: #f2f2f2;
+}
+
+.box{
+    width: 70px;
+    height: 70px;
+    background-color: royalblue;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+}
+
+/* الأمثلة */
+
+.start{
+    justify-content: flex-start;
+}
+
+.end{
+    justify-content: flex-end;
+}
+
+.center{
+    justify-content: center;
+}
+
+.evenly{
+    justify-content: space-evenly;
+}
+
+.around{
+    justify-content: space-around;
+}
+
+.between{
+    justify-content: space-between;
+}

@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h2 {
+    margin-top: 30px;
+}
+
+.container {
+    display: flex;
+    border: 2px solid black;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #f0f0f0;
+    gap: 10px;
+}
+
+.box {
+    width: 70px;
+    height: 70px;
+    background-color: #3498db;
+    color: white;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* الاتجاهات */
+.row {
+    flex-direction: row;
+}
+
+.row-reverse {
+    flex-direction: row-reverse;
+}
+
+.column {
+    flex-direction: column;
+    width: 100px;
+}
+
+.column-reverse {
+    flex-direction: column-reverse;
+    width: 100px;
+}

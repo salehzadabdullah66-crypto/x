@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>إتقان CSS - احترف تصميم الويب</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "on-secondary-container": "#00714d",
+                    "tertiary-fixed": "#e9ddff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-bright": "#f7f9fb",
+                    "on-error": "#ffffff",
+                    "tertiary-container": "#4e03b8",
+                    "on-surface-variant": "#444651",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#dce1ff",
+                    "on-primary-fixed": "#00164e",
+                    "on-surface": "#191c1e",
+                    "on-secondary-fixed": "#002113",
+                    "primary": "#00236f",
+                    "inverse-on-surface": "#eff1f3",
+                    "inverse-surface": "#2d3133",
+                    "surface-container-high": "#e6e8ea",
+                    "secondary": "#006c49",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#1e3a8a",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#5516be",
+                    "secondary-container": "#6cf8bb",
+                    "surface": "#f7f9fb",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "surface-dim": "#d8dadc",
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary-fixed-variant": "#264191",
+                    "on-primary-container": "#90a8ff",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#23005c",
+                    "on-tertiary-container": "#b89cff",
+                    "surface-container": "#eceef0",
+                    "secondary-fixed": "#6ffbbe",
+                    "tertiary-fixed-dim": "#d0bcff",
+                    "tertiary": "#340081",
+                    "inverse-primary": "#b6c4ff",
+                    "surface-tint": "#4059aa",
+                    "outline": "#757682",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#4edea3",
+                    "outline-variant": "#c5c5d3",
+                    "background": "#f7f9fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "gutter": "24px",
+                    "unit": "4px",
+                    "container-max": "1280px",
+                    "margin-desktop": "80px"
+            },
+            "fontFamily": {
+                    "code-sm": ["JetBrains Mono"],
+                    "body-md": ["IBM Plex Sans Arabic"],
+                    "label-caps": ["IBM Plex Sans Arabic"],
+                    "body-lg": ["IBM Plex Sans Arabic"],
+                    "headline-md": ["IBM Plex Sans Arabic"],
+                    "display-lg": ["IBM Plex Sans Arabic"],
+                    "display-lg-mobile": ["IBM Plex Sans Arabic"]
+            },
+            "fontSize": {
+                    "code-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'IBM Plex Sans Arabic', sans-serif;
+        background-color: #f7f9fb;
+      }
+      .code-header {
+        border-bottom: 1px solid #334155;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="bg-surface border-b border-surface-variant docked full-width top-0 z-50 sticky">
+<nav class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-8">
+<span class="text-headline-md font-headline-md text-primary">إتقان CSS</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="#">الرئيسية</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">الدورات</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">التوثيق</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">المجتمع</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex relative">
+<input class="bg-surface-container-low border border-outline-variant rounded-xl px-4 py-1.5 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="بحث..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all font-body-md text-body-md">
+                    تسجيل الدخول
+                </button>
+</div>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative py-24 overflow-hidden">
+
+<div class="max-w-container-max mx-auto px-margin-desktop text-center relative z-10">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-6">
+                    احترف تنسيق المواقع باستخدام CSS
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-10">
+                    تعلم أسس هيكلة العناصر وتوزيع المسافات باحترافية من خلال منهجية أكاديمية مبسطة وعملية.
+                </p>
+<div class="flex flex-wrap justify-center gap-4">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold text-body-lg shadow-lg hover:shadow-xl transition-all">ابدأ التعلم الآن</button>
+<button class="border-2 border-primary text-primary px-8 py-4 rounded-xl font-bold text-body-lg hover:bg-primary/5 transition-all">تصفح المسارات</button>
+</div>
+</div>
+</section>
+<!-- Section 1: Box Model -->
+<section class="py-20 bg-surface-container-lowest">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-7">
+<div class="bg-white rounded-xl border border-surface-variant overflow-hidden shadow-sm">
+<img alt="CSS Box Model Diagram" class="w-full h-auto object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLscHH__P5Wgb1PJnsWPypl0xbE-xMwenYKAy6tGZBcWbkZTJ8hKGn1GYfJFV7y5so8L3SGTgtu691u1AHQM_2w7aGnFet9BvZ1I8oUIF5ryadB5UZCqf6FvEiHD829GdqH3zW63aJdYxqxDBnuvoW_ZUE0w7ltT0iL9GTD_Y76mSyaQe2iXy6H4Ub0nlSwGcmq0JCswpBTdAUaCDBGY9_PKg2KBU1pJUaKIqCE81eGxoioGngyTATNJfPdX"/>
+</div>
+</div>
+<div class="lg:col-span-5">
+<div class="border-r-4 border-primary pr-6 mb-6">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">فهم نموذج الصندوق (The Box Model)</h2>
+<p class="text-on-surface-variant font-body-md text-body-md">كل عنصر في HTML هو عبارة عن صندوق في جوهره.</p>
+</div>
+<div class="space-y-6">
+<div class="p-4 border-r-4 border-on-primary-container bg-surface-container-low rounded-lg">
+<h3 class="font-bold text-primary mb-1">المحتوى (Content)</h3>
+<p class="text-body-md text-on-surface-variant">المساحة الفعلية التي يظهر فيها النص أو الصور.</p>
+</div>
+<div class="p-4 border-r-4 border-secondary rounded-lg bg-surface-container-low">
+<h3 class="font-bold text-secondary mb-1">البطانة (Padding)</h3>
+<p class="text-body-md text-on-surface-variant">المساحة الفارغة التي تفصل بين المحتوى والإطار الداخلي.</p>
+</div>
+<div class="p-4 border-r-4 border-error rounded-lg bg-surface-container-low">
+<h3 class="font-bold text-error mb-1">الإطار (Border)</h3>
+<p class="text-body-md text-on-surface-variant">الحد المحيط بالبطانة والمحتوى، ويمكن تخصيص سمكه ولونه.</p>
+</div>
+<div class="p-4 border-r-4 border-tertiary rounded-lg bg-surface-container-low">
+<h3 class="font-bold text-tertiary mb-1">الهامش (Margin)</h3>
+<p class="text-body-md text-on-surface-variant">المساحة الخارجية التي تفصل العنصر عن العناصر الأخرى المجاورة.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Flexbox -->
+<section class="py-20">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-display-lg-mobile md:text-headline-md text-primary mb-4">التحكم في التوزيع باستخدام Flexbox</h2>
+<p class="text-body-lg text-on-surface-variant max-w-3xl mx-auto">
+                        تعتبر خاصية `justify-content` حجر الأساس في توزيع العناصر عبر المحور الرئيسي، مما يمنحك مرونة كاملة في تصميم الواجهات.
+                    </p>
+</div>
+<div class="bg-white p-8 rounded-xl border border-surface-variant shadow-sm mb-12">
+<img alt="Flexbox justify-content visual guide" class="w-full h-auto rounded-lg" src="https://lh3.googleusercontent.com/aida/AP1WRLt_6UQ7B2lp_XU7zo7mtsQEaujxQlDWws-4PRVtRzuw1-8wfnzPo0nW0Xv4b2YWTk1-eKkibf4Xr3KceuTe4eelt_ol698KSt5KHJAnTS78TZ7Al87BOX9dV6XwEwgMNRolpc8XQylH97nmG7mObl8WLDUWzNvQr2k0qpIIGrQHhMFObcoDPHo59NzCsQvWvLPejPAM5N686yDi0FLfIz5N9t5v_-9aDyiZkuPV0fJbak8Yi4vr4HhwAull"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant">
+<span class="material-symbols-outlined text-primary mb-4" style="font-size: 32px;">align_horizontal_left</span>
+<h4 class="font-bold text-primary mb-2">flex-start &amp; center</h4>
+<p class="text-body-md text-on-surface-variant">تجميع العناصر في البداية أو في منتصف الحاوية تماماً لتوسيط المحتوى.</p>
+</div>
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant">
+<span class="material-symbols-outlined text-primary mb-4" style="font-size: 32px;">space_bar</span>
+<h4 class="font-bold text-primary mb-2">space-between</h4>
+<p class="text-body-md text-on-surface-variant">توزيع العناصر بمسافات متساوية بحيث يكون الأول في البداية والأخير في النهاية.</p>
+</div>
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant">
+<span class="material-symbols-outlined text-primary mb-4" style="font-size: 32px;">unfold_more</span>
+<h4 class="font-bold text-primary mb-2">space-around &amp; evenly</h4>
+<p class="text-body-md text-on-surface-variant">خلق مسافات متزنة حول العناصر وبينها لضمان توازن بصري مريح للعين.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Practical Examples -->
+<section class="py-20 bg-primary text-on-primary">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="flex flex-col md:flex-row gap-12 items-center">
+<div class="md:w-1/2">
+<h2 class="font-display-lg-mobile md:text-headline-md mb-6">أمثلة عملية</h2>
+<p class="text-body-lg mb-8 opacity-90">
+                            طبق ما تعلمته الآن. لاحظ كيف نستخدم الصندوق المرن (Flex) والنموذج الصندوقي معاً لبناء مكونات احترافية.
+                        </p>
+<div class="bg-on-primary/10 p-6 rounded-lg border border-on-primary/20">
+<h4 class="font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">lightbulb</span>
+                                نصيحة تعليمية
+                            </h4>
+<p class="text-body-md">تذكر دائماً أن `box-sizing: border-box;` هي أفضل صديق لك عند حساب أحجام الصناديق.</p>
+</div>
+</div>
+<div class="md:w-1/2 w-full">
+<div class="bg-[#0f172a] rounded-xl overflow-hidden border border-slate-700 shadow-2xl">
+<div class="code-header bg-slate-800 px-4 py-2 flex justify-between items-center">
+<span class="text-slate-400 text-xs font-code-sm">style.css</span>
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm" style="font-size: 18px;">content_copy</span>
+</button>
+</div>
+<div class="p-6 font-code-sm text-code-sm leading-relaxed overflow-x-auto text-slate-300 ltr" dir="ltr">
+<pre><code><span class="text-blue-400">.container</span> {
+  <span class="text-purple-400">display</span>: flex;
+  <span class="text-purple-400">justify-content</span>: center;
+  <span class="text-purple-400">padding</span>: <span class="text-amber-400">24px</span>;
+}
+
+<span class="text-blue-400">.card</span> {
+  <span class="text-purple-400">margin</span>: <span class="text-amber-400">10px</span>;
+  <span class="text-purple-400">border</span>: <span class="text-amber-400">1px solid #ccc</span>;
+  <span class="text-purple-400">padding</span>: <span class="text-amber-400">16px</span>;
+  <span class="text-purple-400">box-sizing</span>: border-box;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-surface-variant">
+<div class="w-full py-12 px-margin-desktop flex flex-col md:flex-row justify-between items-center max-w-container-max mx-auto gap-8">
+<div class="flex flex-col items-center md:items-start">
+<span class="text-headline-md font-headline-md text-primary mb-2">إتقان CSS</span>
+<p class="text-on-surface-variant font-body-md text-body-md text-center md:text-right">منصة تعليمية متخصصة في تطوير مهارات تصميم الويب.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-on-surface-variant hover:underline transition-all font-body-md text-body-md" href="#">عن المنصة</a>
+<a class="text-on-surface-variant hover:underline transition-all font-body-md text-body-md" href="#">سياسة الخصوصية</a>
+<a class="text-on-surface-variant hover:underline transition-all font-body-md text-body-md" href="#">اتصل بنا</a>
+<a class="text-on-surface-variant hover:underline transition-all font-body-md text-body-md" href="#">الأسئلة الشائعة</a>
+</div>
+<p class="text-on-surface-variant font-body-md text-body-md">© ٢٠٢٤ إتقان CSS. جميع الحقوق محفوظة.</p>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for smooth scrolling or hover effects could be added here
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body></html>

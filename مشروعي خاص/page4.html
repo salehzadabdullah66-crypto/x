@@ -1,0 +1,302 @@
+<!DOCTYPE html><html class="dark" dir="rtl" lang="ar"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&amp;family=Tajawal:wght@400;500;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#051424",
+                    "on-secondary-container": "#e6ecff",
+                    "tertiary-fixed": "#ffdad7",
+                    "on-error": "#690005",
+                    "primary": "#bec6e0",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "inverse-primary": "#565e74",
+                    "on-background": "#d4e4fa",
+                    "surface-container-highest": "#273647",
+                    "on-tertiary-container": "#eb4141",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface-variant": "#273647",
+                    "error-container": "#93000a",
+                    "primary-fixed": "#dae2fd",
+                    "surface-bright": "#2c3a4c",
+                    "on-secondary-fixed": "#001a42",
+                    "on-secondary": "#002e6a",
+                    "on-tertiary": "#68000a",
+                    "surface-container-lowest": "#010f1f",
+                    "secondary-container": "#0566d9",
+                    "on-primary-container": "#798098",
+                    "surface-container-low": "#0d1c2d",
+                    "outline": "#909097",
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#d4e4fa",
+                    "inverse-on-surface": "#233143",
+                    "outline-variant": "#45464d",
+                    "secondary": "#adc6ff",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "on-tertiary-fixed": "#410004",
+                    "surface-tint": "#bec6e0",
+                    "surface-container-high": "#1c2b3c",
+                    "tertiary": "#ffb3ad",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary-fixed-variant": "#004395",
+                    "on-surface-variant": "#c6c6cd",
+                    "error": "#ffb4ab",
+                    "inverse-surface": "#d4e4fa",
+                    "surface-dim": "#051424",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "on-primary-fixed": "#131b2e",
+                    "on-primary": "#283044",
+                    "primary-container": "#0f172a",
+                    "background": "#051424",
+                    "tertiary-container": "#390003",
+                    "surface-container": "#122131"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "12px",
+                    "margin-desktop": "40px",
+                    "stack-lg": "48px",
+                    "container-max": "1280px",
+                    "stack-md": "24px"
+            },
+            "fontFamily": {
+                    "body-md": ["Tajawal"],
+                    "label-md": ["Tajawal"],
+                    "headline-md": ["Cairo"],
+                    "body-lg": ["Tajawal"],
+                    "display-lg": ["Cairo"],
+                    "code-sm": ["jetbrainsMono"],
+                    "headline-sm": ["Cairo"],
+                    "display-lg-mobile": ["Cairo"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-md": ["30px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "code-sm": ["13px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(18, 33, 49, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #051424; }
+        ::-webkit-scrollbar-thumb { background: #273647; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col selection:bg-secondary-container/30">
+<!-- Header / TopNavBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 shadow-sm h-20">
+<nav class="flex flex-row-reverse justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-full">
+<div class="flex items-center gap-4">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">اليوتيوبر المحترف للشروحات SY</span>
+</div>
+<div class="hidden md:flex flex-row-reverse items-center gap-8">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">الرئيسية</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">الشروحات</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">من نحن</a>
+<a class="text-primary border-b-2 border-primary font-bold pb-1 transition-colors duration-200" href="#">اتصل بنا</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-variant/50 rounded-full transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-variant/50 rounded-full transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+</button>
+<button class="md:hidden p-2" onclick="document.getElementById('mobile-nav').classList.toggle('translate-x-full')">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</nav>
+</header>
+<!-- SideNavBar (Mobile) -->
+<aside class="fixed inset-y-0 right-0 z-[60] w-64 bg-surface border-l border-outline-variant/20 shadow-xl transition-transform transform translate-x-full md:hidden flex flex-col" id="mobile-nav">
+<div class="p-6 border-b border-outline-variant/10">
+<h2 class="font-headline-sm text-primary">اليوتيوبر المحترف</h2>
+<p class="text-on-surface-variant text-label-md">للشروحات التقنية SY</p>
+</div>
+<nav class="flex-1 p-4 space-y-2">
+<a class="flex flex-row-reverse items-center text-on-surface-variant p-3 hover:bg-surface-variant/50 rounded-lg" href="#">
+<span class="material-symbols-outlined ml-3" data-icon="home">home</span> الرئيسية
+            </a>
+<a class="flex flex-row-reverse items-center text-on-surface-variant p-3 hover:bg-surface-variant/50 rounded-lg" href="#">
+<span class="material-symbols-outlined ml-3" data-icon="video_library">video_library</span> الشروحات
+            </a>
+<a class="flex flex-row-reverse items-center text-on-surface-variant p-3 hover:bg-surface-variant/50 rounded-lg" href="#">
+<span class="material-symbols-outlined ml-3" data-icon="info">info</span> من نحن
+            </a>
+<a class="flex flex-row-reverse items-center bg-secondary-container text-on-secondary-container rounded-lg p-3" href="#">
+<span class="material-symbols-outlined ml-3" data-icon="mail" style="font-variation-settings: 'FILL' 1;">mail</span> اتصل بنا
+            </a>
+</nav>
+<button class="m-6 p-3 bg-surface-container-highest rounded-lg text-center" onclick="document.getElementById('mobile-nav').classList.add('translate-x-full')">إغلاق القائمة</button>
+</aside>
+<main class="flex-grow pt-32 pb-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<!-- Hero Section -->
+<section class="text-center mb-16">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background mb-4">تواصل معنا</h1>
+<p class="text-body-lg text-on-surface-variant max-w-2xl mx-auto">نحن هنا للإجابة على استفساراتك التقنية ومساعدتك في تطوير قناتك على اليوتيوب. لا تتردد في مراسلتنا.</p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Contact Form Card -->
+<div class="lg:col-span-7 glass-card rounded-xl p-8 shadow-sm">
+<div class="mb-8">
+<h2 class="font-headline-md text-headline-md text-primary mb-2">أرسل رسالة</h2>
+<p class="text-on-surface-variant font-label-md">سنقوم بالرد عليك في غضون 24 ساعة.</p>
+</div>
+<form class="space-y-stack-md" onsubmit="event.preventDefault(); alert('تم استلام رسالتك بنجاح!')">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="flex flex-col space-y-2">
+<label class="text-label-md text-on-surface-variant mr-1">الاسم الكامل</label>
+<input class="bg-surface-container-low border border-outline-variant/30 rounded-lg p-3 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-on-surface" placeholder="مثال: أحمد محمد" type="text">
+</div>
+<div class="flex flex-col space-y-2">
+<label class="text-label-md text-on-surface-variant mr-1">البريد الإلكتروني</label>
+<input class="bg-surface-container-low border border-outline-variant/30 rounded-lg p-3 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-on-surface" placeholder="email@example.com" type="email">
+</div>
+</div>
+<div class="flex flex-col space-y-2">
+<label class="text-label-md text-on-surface-variant mr-1">الموضوع</label>
+<select class="bg-surface-container-low border border-outline-variant/30 rounded-lg p-3 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-on-surface appearance-none">
+<option>استفسار تقني</option>
+<option>تعاون إعلاني</option>
+<option>طلب شرح خاص</option>
+<option>أخرى</option>
+</select>
+</div>
+<div class="flex flex-col space-y-2">
+<label class="text-label-md text-on-surface-variant mr-1">الرسالة</label>
+<textarea class="bg-surface-container-low border border-outline-variant/30 rounded-lg p-3 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-on-surface resize-none" placeholder="اكتب تفاصيل استفسارك هنا..." rows="5"></textarea>
+</div>
+<button class="w-full md:w-auto px-10 py-4 bg-secondary-container text-on-secondary-container font-bold rounded-lg hover:shadow-[0_0_20px_rgba(5,102,217,0.4)] transition-all active:scale-95 flex items-center justify-center gap-2" type="submit">
+                        إرسال الرسالة
+                        <span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</form>
+</div>
+<!-- Side Info & Socials -->
+<div class="lg:col-span-5 flex flex-col gap-gutter">
+<!-- Communication Cards -->
+<div class="glass-card rounded-xl p-8 flex flex-col gap-6">
+<h3 class="font-headline-sm text-primary">معلومات التواصل</h3>
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-all">
+<span class="material-symbols-outlined" data-icon="alternate_email">alternate_email</span>
+</div>
+<div>
+<p class="text-label-md text-on-surface-variant">البريد الرسمي</p>
+<p class="font-bold text-on-surface">contact@sy-pro.tech</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-all">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+</div>
+<div>
+<p class="text-label-md text-on-surface-variant">الموقع</p>
+<p class="font-bold text-on-surface">سوريا - دمشق</p>
+</div>
+</div>
+</div>
+<!-- Social Grid Card -->
+<div class="glass-card rounded-xl p-8">
+<h3 class="font-headline-sm text-primary mb-6">شبكاتنا الاجتماعية</h3>
+<div class="grid grid-cols-3 gap-4">
+<a class="flex flex-col items-center gap-2 p-4 bg-surface-container-low rounded-lg hover:bg-red-500/10 transition-all border border-outline-variant/10" href="#">
+<span class="material-symbols-outlined text-4xl text-red-500" data-icon="play_circle">play_circle</span>
+<span class="text-label-md">YouTube</span>
+</a>
+<a class="flex flex-col items-center gap-2 p-4 bg-surface-container-low rounded-lg hover:bg-blue-400/10 transition-all border border-outline-variant/10" href="#">
+<span class="material-symbols-outlined text-4xl text-blue-400" data-icon="send">send</span>
+<span class="text-label-md">Telegram</span>
+</a>
+<a class="flex flex-col items-center gap-2 p-4 bg-surface-container-low rounded-lg hover:bg-blue-600/10 transition-all border border-outline-variant/10" href="#">
+<span class="material-symbols-outlined text-4xl text-blue-600" data-icon="group">group</span>
+<span class="text-label-md">Twitter</span>
+</a>
+</div>
+</div>
+<!-- Map Placeholder -->
+<div class="glass-card rounded-xl overflow-hidden h-64 relative">
+<div class="absolute inset-0 bg-surface-container-highest/50 flex items-center justify-center pointer-events-none z-10">
+<div class="px-4 py-2 bg-surface/90 border border-primary/20 rounded-full backdrop-blur-md shadow-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="map">map</span>
+<span class="font-bold">موقعنا في دمشق</span>
+</div>
+</div>
+<div class="w-full h-full grayscale opacity-40 hover:opacity-100 hover:grayscale-0 transition-all duration-700" data-alt="A stylized digital map of Damascus city with clean modern cartography, featuring deep navy streets and glowing tech-blue icons. The aesthetic is high-tech and minimalist, matching a dark mode instructional platform theme. Soft focus on surrounding areas with a vibrant blue pulse indicating the specific office location in a futuristic way." data-location="Damascus, Syria" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1Kzq2nKqxHrvcW2HXKDnoKdDto88ln9H-BVXide8fEe_8WAExuTYB7p9E2arFLKgWxLsd3Q99__ptSzoHQfd1CSqiEbNX1xVUdtRUOCAz1QEYjlIUhaeK6worH_pLW5uCv--VjPl66X4XEuY5cyL8z_78wj6scJFyLf-z0enTopLMeBZgjhUy3f1nK2Dqt0Fc7Wu6FkhmYH1c7PrU1qs8gxQl0O9NbYm9LKRc3cE8Ns42atg4DbMEfZ3R6I1Bv_dKcK0WKvGbu3Sa')">
+</div>
+</div>
+</div>
+</div>
+<!-- FAQ CTA -->
+<section class="mt-20 glass-card rounded-xl p-10 text-center border-dashed border-2 border-primary/10">
+<h3 class="font-headline-md text-on-surface mb-4">هل تبحث عن إجابات سريعة؟</h3>
+<p class="text-on-surface-variant mb-8 max-w-xl mx-auto">لقد جمعنا أكثر الأسئلة شيوعاً في صفحة واحدة لمساعدتك بشكل أسرع.</p>
+<a class="inline-flex items-center gap-2 px-8 py-3 bg-surface-container-highest border border-outline-variant rounded-lg hover:bg-surface-variant transition-colors" href="#">
+                انتقل لصفحة الأسئلة الشائعة
+                <span class="material-symbols-outlined" data-icon="help">help</span>
+</a>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-lg px-margin-desktop flex flex-col items-center space-y-stack-md bg-surface-container-lowest border-t border-outline-variant/10">
+<div class="flex flex-col items-center space-y-4">
+<span class="font-headline-sm text-primary">اليوتيوبر المحترف</span>
+<div class="flex gap-8">
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-md" href="#">سياسة الخصوصية</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-md" href="#">شروط الاستخدام</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-md" href="#">الأرشيف</a>
+</div>
+</div>
+<p class="text-on-surface-variant font-label-md">© 2024 اليوتيوبر المحترف للشروحات SY. جميع الحقوق محفوظة.</p>
+</footer>
+<!-- FAB for quick contact -->
+<button class="fixed bottom-8 left-8 w-16 h-16 bg-secondary-container text-on-secondary-container rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-[100]" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+<span class="material-symbols-outlined text-3xl" data-icon="keyboard_arrow_up">keyboard_arrow_up</span>
+</button>
+<script>
+        // Micro-interactions and glow effects
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>
